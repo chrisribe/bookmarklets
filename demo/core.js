@@ -48,14 +48,14 @@ javascript:(function() {
             existingElement.parentNode.removeChild(existingElement);
         }
     }
-
-    loadCSS('demo.css', 'demoCSS');
-    loadHTML('demo.html', 'demoHTML', function(responseText) {
+	var root = "https://chrisribe.github.io/bookmarklets";
+    loadCSS(root + '/demo/demo.css', 'demoCSS');
+    loadHTML(root + '/demo/demo.html', 'demoHTML', function(responseText) {
         var div = document.createElement('div');
         div.id = 'demoHTML';
         div.innerHTML = responseText;
         document.body.appendChild(div);
-        loadScript('demo.js', 'demoJS', function() {
+        loadScript(root + '/demo/demo.js', 'demoJS', function() {
             console.log('JS loaded');
         });
     });
