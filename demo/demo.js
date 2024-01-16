@@ -21,7 +21,7 @@ function setupEventListeners() {
         closeBtn.addEventListener('click', function() {
             status.textContent = 'closeBtn was clicked!';
 			bmCore.removeIfExists('demoCSS');
-			bmCore.removeIfExists('demoHML');
+			bmCore.removeIfExists('demoHTML');
 			bmCore.removeIfExists('demoJS');
         });
     } else {
