@@ -10,11 +10,11 @@ function setupEventListeners() {
 
         activateBtn.addEventListener('click', function() {
 			var value = bmarks.value;
-			var text = bmarks.options[e.selectedIndex].text;
+			var text = bmarks.options[bmarks.selectedIndex].text;
 
             status.textContent = `activateBtn was clicked! ${value}, ${text}`;
 			
-			var jValue = JSON.parse(value)
+			var jValue = JSON.parse(value);
 			bmCore.loadWidget(jValue.folder, jValue.appName);
         });
 
