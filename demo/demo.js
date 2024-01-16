@@ -3,16 +3,26 @@ function setupEventListeners() {
 
     // Ensure myUI is loaded
     if(myUI) {
-        var button1 = document.getElementById('button1');
-        var button2 = document.getElementById('button2');
+        var activateBtn = document.getElementById('activateBtn');
+        var closeBtn = document.getElementById('closeBtn');
         var status = document.getElementById('status-text');
+        var bmarks = document.getElementById('bmarks');
 
-        button1.addEventListener('click', function() {
-            status.textContent = 'Button 1 was clicked!';
+        activateBtn.addEventListener('click', function() {
+			var value = bmarks.value;
+			var text = bmarks.options[e.selectedIndex].text;
+
+            status.textContent = `activateBtn was clicked! ${value}, ${text}`;
+			
+			var jValue = JSON.parse(value)
+			bmCore.loadWidget(jValue.folder, jValue.appName);
         });
 
-        button2.addEventListener('click', function() {
-            status.textContent = 'Button 2 was clicked!';
+        closeBtn.addEventListener('click', function() {
+            status.textContent = 'closeBtn was clicked!';
+			bmCore.removeIfExists('demoCSS');
+			bmCore.removeIfExists('demoHML');
+			bmCore.removeIfExists('demoJS');
         });
     } else {
         // If myUI is not yet loaded, try again in 500 milliseconds

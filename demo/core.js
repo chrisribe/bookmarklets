@@ -1,17 +1,17 @@
-javascript:(function() {
+window.bmCore = (function() {
     function loadScript(url, id, callback) {
         removeIfExists(id);
         var script = document.createElement("script");
         script.type = "text/javascript";
         script.id = id;
-		if (script.readyState) {  //IE  
+		if (script.readyState) {
 			script.onreadystatechange = function() {  
 				if (script.readyState == "loaded" || script.readyState == "complete") {  
 					script.onreadystatechange = null;  
 					callback();  
 				}  
 			};  
-		} else {  //Others  
+		} else {
 			script.onload = function() {  
 				callback();  
 			};  
@@ -49,14 +49,23 @@ javascript:(function() {
         }
     }
 	var root = "https://chrisribe.github.io/bookmarklets";
-    loadCSS(root + '/demo/demo.css', 'demoCSS');
-    loadHTML(root + '/demo/demo.html', 'demoHTML', function(responseText) {
-        var div = document.createElement('div');
-        div.id = 'demoHTML';
-        div.innerHTML = responseText;
-        document.body.appendChild(div);
-        loadScript(root + '/demo/demo.js', 'demoJS', function() {
-            console.log('JS loaded');
-        });
-    });
+	
+	function loadWidget(folderName, appName){
+		loadCSS(`${root}/${folderName}/${appName}.css`, `${folderName}CSS`);
+		loadHTML(`${root}/${folderName}/${appName}.html`, `${folderName}HTML`, function(responseText) {
+			var div = document.createElement('div');
+			div.id = `${folderName}HTML`;
+			div.innerHTML = responseText;
+			document.body.appendChild(div);
+			loadScript(`${root}/${folderName}/${appName}.js`, `${folderName}JS`, function() {
+				console.log(`JS loaded ${folderName}-${appName}`);
+			});
+		});
+	}
+	
+	loadWidget('demo', 'demo');
+	return {
+		loadWidget: loadWidget,
+		removeIfExists: removeIfExists
+	};
 })();
