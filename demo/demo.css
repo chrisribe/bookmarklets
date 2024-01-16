@@ -9,6 +9,9 @@
     padding: 20px;
     z-index: 1000;
 }
+#myUI div {
+	margin: 6px;
+}
 
 #myUI #settings {
     margin-bottom: 20px;
