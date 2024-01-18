@@ -1,4 +1,25 @@
 window.bmCore = (function() {
+    var _root = "https://chrisribe.github.io/bookmarklets";
+
+    var _config;
+    function setConfig(config) {
+        _config = config;
+        if(_config && _config.app) {
+            if( _config.app.root) {
+                _root = _config.app.root;
+            }
+
+            loadWidget(
+                _config.app.folder,
+                _config.app.name
+            );
+        }
+    }
+    
+    function getConfig() {
+        return _config;
+    }
+
     function loadScript(url, id, callback) {
         removeIfExists(id);
         var script = document.createElement("script");
@@ -48,24 +69,24 @@ window.bmCore = (function() {
             existingElement.parentNode.removeChild(existingElement);
         }
     }
-	var root = "https://chrisribe.github.io/bookmarklets";
 	
 	function loadWidget(folderName, appName){
-		loadCSS(`${root}/${folderName}/${appName}.css`, `${folderName}CSS`);
-		loadHTML(`${root}/${folderName}/${appName}.html`, `${folderName}HTML`, function(responseText) {
+		loadCSS(`${_root}/${folderName}/${appName}.css`, `${folderName}CSS`);
+		loadHTML(`${_root}/${folderName}/${appName}.html`, `${folderName}HTML`, function(responseText) {
 			var div = document.createElement('div');
 			div.id = `${folderName}HTML`;
 			div.innerHTML = responseText;
 			document.body.appendChild(div);
-			loadScript(`${root}/${folderName}/${appName}.js`, `${folderName}JS`, function() {
+			loadScript(`${_root}/${folderName}/${appName}.js`, `${folderName}JS`, function() {
 				console.log(`JS loaded ${folderName}-${appName}`);
 			});
 		});
 	}
-	
-	loadWidget('demo', 'demo');
+
 	return {
-		loadWidget: loadWidget,
-		removeIfExists: removeIfExists
+        setConfig: setConfig,
+        removeIfExists: removeIfExists,
+        loadWidget: loadWidget
 	};
 })();
+bmCore.setConfig({app:{name:"demo",folder:"demo"}})
