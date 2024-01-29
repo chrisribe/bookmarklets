@@ -16,6 +16,16 @@
 			);
 		}
 	});
-	console.log(azDeleteCmds);
+	let cmdsString = azDeleteCmds.join('"\n"');
+	let bashCmdLoop = `
+	commands=(  
+		"${cmdsString}"
+	)
+	for cmd in "\${commands[@]}"  
+	do  
+		eval $cmd  
+	done	
+	`;
+	console.log("Run in bash to delete all containers", bashCmdLoop);
 
 })();
