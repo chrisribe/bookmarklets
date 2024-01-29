@@ -3,12 +3,15 @@
 	var rows = document.querySelectorAll('.azc-grid-multiselectable tr');
 	
 	//List all labels for debug
+	var names = [];
 	rows.forEach((row) => {  
 		let ariaLabel = row.getAttribute('aria-label');
 		if(ariaLabel){
-			console.log(ariaLabel);  
+			names.push(ariaLabel)
 		}
 	});
+	console.log(names);  
+
 
 	//Select the top 10
 	var maxIndex = Math.min(rows.length, 2 + 10);  
