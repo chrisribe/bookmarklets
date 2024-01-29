@@ -1,10 +1,21 @@
 (function(){
 
-	var rows = document.querySelectorAll('.azc-grid-multiselectable tr');  
+	var rows = document.querySelectorAll('.azc-grid-multiselectable tr');
+	
+	//List all labels for debug
+	rows.forEach((row) => {  
+		let ariaLabel = row.getAttribute('aria-label');
+		if(ariaLabel){
+			console.log(ariaLabel);  
+		}
+	});
+
+	//Select the top 10
 	var maxIndex = Math.min(rows.length, 2 + 10);  
+	var names = [];
 	for (var _i = 2; _i < maxIndex; _i++) {  	
 		var row = rows[_i];
-		console.log("RS:", row.getAttribute('aria-selected'));
+		//console.log("RS:", row.getAttribute('aria-selected'));
 		if (row.getAttribute('aria-selected') == 'false'){
 			row.click()
 		}
