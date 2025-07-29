@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Page for Bookmarklet</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            line-height: 1.6;
+        }
+        .test-content {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+        img {
+            max-width: 100px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Page for Page Analyzer</h1>
+    <p>This is a test page to verify the bookmarklet works correctly.</p>
+    
+    <div class="test-content">
+        <h2>Content Section 1</h2>
+        <p>Some sample content with <a href="#">links</a> and <strong>formatting</strong>.</p>
+        <button onclick="alert('Test button')">Test Button</button>
+        <input type="text" placeholder="Test input" />
+    </div>
+    
+    <div class="test-content">
+        <h2>Content Section 2</h2>
+        <p>More content to analyze. This should give us some stats to display.</p>
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' fill='%23ddd'/%3E%3Ctext x='50' y='50' text-anchor='middle' dy='.3em'%3EImage 1%3C/text%3E%3C/svg%3E" alt="Test Image 1">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' fill='%23ccc'/%3E%3Ctext x='50' y='50' text-anchor='middle' dy='.3em'%3EImage 2%3C/text%3E%3C/svg%3E" alt="Test Image 2">
+    </div>
+    
+    <div class="test-content">
+        <h2>Instructions</h2>
+        <p>To test the bookmarklet:</p>
+        <ol>
+            <li>Go to the bookmarklets collection page</li>
+            <li>Right-click the "_template" bookmarklet and bookmark it</li>
+            <li>Come back to this page</li>
+            <li>Click the bookmarked "_template" bookmarklet</li>
+            <li>The Page Analyzer should appear on the right side</li>
+        </ol>
+    </div>
+    
+    <script>
+        console.log('Test page loaded with ' + document.querySelectorAll('*').length + ' elements');
+    </script>
+</body>
+</html>

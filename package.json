@@ -1,0 +1,14 @@
+{
+  "name": "bookmarklets",
+  "version": "1.0.0",
+  "description": "A collection of useful bookmarklets with build system and browser interface",
+  "private": true,
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node build.js --watch",
+    "start": "echo \"Run 'npm run build' to generate bookmarklets or 'npm run dev' for watch mode.\""
+  },
+  "devDependencies": {
+    "terser": "^5.0.0"
+  }
+}

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookmarklets Collection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        
+        .category {
+            background: white;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .category-header {
+            background: #3498db;
+            color: white;
+            padding: 15px 20px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .bookmarklets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .bookmarklet {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 20px;
+            background: #fafafa;
+            transition: all 0.3s ease;
+        }
+        
+        .bookmarklet:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .bookmarklet-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .bookmarklet-description {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .bookmarklet-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        
+        .bookmarklet-size {
+            background: #ecf0f1;
+            padding: 2px 8px;
+            border-radius: 3px;
+        }
+        
+        .bookmarklet-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .bookmarklet-code {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        
+        .code-textarea {
+            width: 100%;
+            height: 120px;
+            margin: 0;
+            padding: 8px;
+            font-family: 'Courier New', Monaco, monospace;
+            font-size: 11px;
+            line-height: 1.4;
+            color: #495057;
+            background: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 3px;
+            resize: vertical;
+            word-break: break-all;
+        }
+        
+        .code-textarea:focus {
+            outline: none;
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+        
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+        
+        .instructions {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .instructions h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .instructions p {
+            color: #856404;
+            margin-bottom: 8px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #7f8c8d;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .bookmarklets-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .bookmarklet-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔖 Bookmarklets Collection</h1>
+            <p class="subtitle">A curated collection of useful browser bookmarklets</p>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Bookmarklets</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">16KB</div>
+                    <div class="stat-label">Total Size</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="instructions">
+            <h3>🚀 How to Install Bookmarklets</h3>
+            <p><strong>Method 1:</strong> Right-click the "Add to Bookmarks" button and select "Bookmark this link"</p>
+            <p><strong>Method 2:</strong> Drag the "Add to Bookmarks" button to your bookmarks bar</p>
+            <p><strong>Method 3:</strong> Copy the code and create a new bookmark manually with the copied code as the URL</p>
+        </div>
+
+        
+                <div class="category">
+                    <div class="category-header">Azure (2)</div>
+                    <div class="bookmarklets-grid">
+                        
+                            <div class="bookmarklet">
+                                <div class="bookmarklet-name">Azure Container Delete Commands</div>
+                                <div class="bookmarklet-description">Generate Azure CLI commands to delete all containers in a storage account. Outputs bash script to console for batch deletion.</div>
+                                <div class="bookmarklet-meta">
+                                    <span>by chrisribe</span>
+                                    <span class="bookmarklet-size">949 bytes</span>
+                                </div>
+                                <div class="bookmarklet-actions">
+                                    <a href="javascript:!function(){var e=document.querySelectorAll(&quot;.azc-grid-multiselectable tr&quot;);if(0===e.length)return void console.warn(&quot;No Azure grid rows found. Make sure you are on the correct Azure portal page.&quot;);let t=document.querySelector(&quot;.fxs-blade-title-titleText&quot;);if(!t)return void console.error(&quot;Could not find Azure storage account title. Make sure you are on the correct Azure portal page.&quot;);let o=t.innerText.split(&quot; | &quot;)[0];console.log(&quot;Account name:&quot;,o);var n=[];if(e.forEach(e=&gt;{let t=e.getAttribute(&quot;aria-label&quot;);t&amp;&amp;n.push(`az storage blob delete-batch --account-name ${o} --source https://${o}.blob.core.windows.net/${t}`)}),0===n.length)return void console.warn(&quot;No containers found to delete.&quot;);let r=`\n\tcommands=(  \n\t\t&quot;${n.join(&#39;&quot;\n&quot;&#39;)}&quot;\n\t)\n\tfor cmd in &quot;\${commands[@]}&quot;  \n\tdo  \n\t\teval $cmd  \n\tdone\t\n\t`;console.log(`Generated ${n.length} delete commands:`),console.log(&quot;Run in bash to delete all containers&quot;,r)}();" class="btn btn-primary" title="Drag to bookmarks bar or right-click to bookmark">
+                                        📌 Add to Bookmarks
+                                    </a>
+                                    <button class="btn btn-secondary" onclick="copyFromTextarea('code-0', 'Azure Container Delete Commands')">
+                                        📋 Copy Code
+                                    </button>
+                                </div>
+                                <div class="bookmarklet-code">
+                                    <textarea readonly onclick="this.select()" class="code-textarea" id="code-0">javascript:!function(){var e=document.querySelectorAll(".azc-grid-multiselectable tr");if(0===e.length)return void console.warn("No Azure grid rows found. Make sure you are on the correct Azure portal page.");let t=document.querySelector(".fxs-blade-title-titleText");if(!t)return void console.error("Could not find Azure storage account title. Make sure you are on the correct Azure portal page.");let o=t.innerText.split(" | ")[0];console.log("Account name:",o);var n=[];if(e.forEach(e=>{let t=e.getAttribute("aria-label");t&&n.push(`az storage blob delete-batch --account-name ${o} --source https://${o}.blob.core.windows.net/${t}`)}),0===n.length)return void console.warn("No containers found to delete.");let r=`\n\tcommands=(  \n\t\t"${n.join('"\n"')}"\n\t)\n\tfor cmd in "\${commands[@]}"  \n\tdo  \n\t\teval $cmd  \n\tdone\t\n\t`;console.log(`Generated ${n.length} delete commands:`),console.log("Run in bash to delete all containers",r)}();</textarea>
+                                </div>
+                            </div>
+                        
+                            <div class="bookmarklet">
+                                <div class="bookmarklet-name">Azure Select &amp; Delete Top 10</div>
+                                <div class="bookmarklet-description">Automatically select the top 10 items in an Azure portal grid and trigger the delete action. Useful for bulk cleanup operations.</div>
+                                <div class="bookmarklet-meta">
+                                    <span>by chrisribe</span>
+                                    <span class="bookmarklet-size">719 bytes</span>
+                                </div>
+                                <div class="bookmarklet-actions">
+                                    <a href="javascript:!function(){var e=document.querySelectorAll(&quot;.azc-grid-multiselectable tr&quot;);if(0!==e.length){var o=[];e.forEach(e=&gt;{let t=e.getAttribute(&quot;aria-label&quot;);t&amp;&amp;o.push(t)}),console.log(&quot;Found rows:&quot;,o);for(var t=Math.min(e.length,12),r=0,l=2;l&lt;t;l++){var a=e[l];a&amp;&amp;&quot;false&quot;==a.getAttribute(&quot;aria-selected&quot;)&amp;&amp;(a.click(),r++)}console.log(`Selected ${r} rows`),setTimeout(function(){var e=document.querySelector(&#39;.fxs-blade-commandBarContainer [title=&quot;Delete&quot;] div&#39;);e?(e.click(),console.log(&quot;Delete button clicked&quot;)):console.warn(&quot;Delete button not found. Make sure you are on the correct Azure portal page.&quot;)},500)}else console.warn(&quot;No Azure grid rows found. Make sure you are on the correct Azure portal page.&quot;)}();" class="btn btn-primary" title="Drag to bookmarks bar or right-click to bookmark">
+                                        📌 Add to Bookmarks
+                                    </a>
+                                    <button class="btn btn-secondary" onclick="copyFromTextarea('code-1', 'Azure Select & Delete Top 10')">
+                                        📋 Copy Code
+                                    </button>
+                                </div>
+                                <div class="bookmarklet-code">
+                                    <textarea readonly onclick="this.select()" class="code-textarea" id="code-1">javascript:!function(){var e=document.querySelectorAll(".azc-grid-multiselectable tr");if(0!==e.length){var o=[];e.forEach(e=>{let t=e.getAttribute("aria-label");t&&o.push(t)}),console.log("Found rows:",o);for(var t=Math.min(e.length,12),r=0,l=2;l<t;l++){var a=e[l];a&&"false"==a.getAttribute("aria-selected")&&(a.click(),r++)}console.log(`Selected ${r} rows`),setTimeout(function(){var e=document.querySelector('.fxs-blade-commandBarContainer [title="Delete"] div');e?(e.click(),console.log("Delete button clicked")):console.warn("Delete button not found. Make sure you are on the correct Azure portal page.")},500)}else console.warn("No Azure grid rows found. Make sure you are on the correct Azure portal page.")}();</textarea>
+                                </div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+                <div class="category">
+                    <div class="category-header">Azure DevOps (1)</div>
+                    <div class="bookmarklets-grid">
+                        
+                            <div class="bookmarklet">
+                                <div class="bookmarklet-name">Multi-Select Table Rows</div>
+                                <div class="bookmarklet-description">Enable multi-selection of table rows with data-row-index attributes using Ctrl+Click. Includes auto-select options and a control panel.</div>
+                                <div class="bookmarklet-meta">
+                                    <span>by chrisribe</span>
+                                    <span class="bookmarklet-size">5253 bytes</span>
+                                </div>
+                                <div class="bookmarklet-actions">
+                                    <a href="javascript:!function(){&quot;use strict&quot;;let e=20,t=new Set;function n(e){const n=e.getAttribute(&quot;data-row-index&quot;);if(t.has(n))return;t.add(n);const o=new MouseEvent(&quot;click&quot;,{bubbles:!0,cancelable:!0,ctrlKey:!0,view:window});e.removeEventListener(&quot;click&quot;,c,!0),e.dispatchEvent(o),setTimeout(()=&gt;{e.addEventListener(&quot;click&quot;,c,!0)},10),e.classList.add(&quot;multi-selected&quot;)}function o(e){const n=e.getAttribute(&quot;data-row-index&quot;);if(t.has(n)){if(t.delete(n),e.classList.contains(&quot;selected&quot;)||&quot;true&quot;===e.getAttribute(&quot;aria-selected&quot;)){const t=new MouseEvent(&quot;click&quot;,{bubbles:!0,cancelable:!0,ctrlKey:!0,view:window});e.removeEventListener(&quot;click&quot;,c,!0),e.dispatchEvent(t),setTimeout(()=&gt;{e.addEventListener(&quot;click&quot;,c,!0)},10)}e.classList.remove(&quot;multi-selected&quot;)}}function l(){const n=document.getElementById(&quot;multiselect-status&quot;);n&amp;&amp;(n.textContent=`Selected: ${t.size}/${e}`)}function c(c){const i=c.target.closest(&quot;tr[data-row-index]&quot;);if(!i)return;if(!c.ctrlKey)return;c.preventDefault(),c.stopPropagation();const r=i.getAttribute(&quot;data-row-index&quot;);if(t.has(r))o(i);else{if(t.size&gt;=e)return void(confirm(`Maximum ${e} selections reached! Increase limit and continue?`)&amp;&amp;(e+=50,n(i)));n(i)}l()}function i(){document.querySelectorAll(&quot;tr[data-row-index]&quot;).forEach(e=&gt;{e.addEventListener(&quot;click&quot;,c,!0)})}function r(){t.forEach(e=&gt;{const t=document.querySelector(`tr[data-row-index=&quot;${e}&quot;]`);t&amp;&amp;o(t)}),t.clear(),l()}function d(){const e=[];return t.forEach(t=&gt;{const n=document.querySelector(`tr[data-row-index=&quot;${t}&quot;]`);n&amp;&amp;e.push({rowIndex:t,element:n,text:n.textContent.trim()})}),e}function s(t=e){r();const o=document.querySelectorAll(&quot;tr[data-row-index]&quot;),c=Math.min(t,o.length);t&gt;e&amp;&amp;(e=t);for(let e=0;e&lt;c;e++)setTimeout(()=&gt;{const t=o[e];t&amp;&amp;(n(t),l()),e===c-1&amp;&amp;setTimeout(()=&gt;{console.log(`Auto-selected ${c} rows`)},50)},20*e)}function a(){r();document.querySelectorAll(&quot;tr[data-row-index]&quot;).forEach(e=&gt;{e.removeEventListener(&quot;click&quot;,c,!0),e.classList.remove(&quot;multi-selected&quot;)});const e=document.getElementById(&quot;multiselect-status&quot;),n=document.getElementById(&quot;multiselect-controls&quot;);e&amp;&amp;e.remove(),n&amp;&amp;n.remove(),window.multiSelectDebug&amp;&amp;delete window.multiSelectDebug,t.clear(),console.log(&quot;Multi-select bookmarklet destroyed and cleaned up.&quot;)}document.querySelectorAll(&quot;tr.multi-selected&quot;).forEach(e=&gt;{o(e)}),t.clear(),i(),function(){const e=document.getElementById(&quot;multiselect-status&quot;);e&amp;&amp;e.remove();const t=document.createElement(&quot;div&quot;);t.id=&quot;multiselect-status&quot;,t.style.cssText=&quot;\n            position: fixed;\n            top: 10px;\n            right: 10px;\n            background: #0078d4;\n            color: white;\n            padding: 8px 12px;\n            border-radius: 4px;\n            font-family: Arial, sans-serif;\n            font-size: 12px;\n            z-index: 10000;\n            box-shadow: 0 2px 8px rgba(0,0,0,0.2);\n        &quot;,document.body.appendChild(t)}(),function(){const e=document.getElementById(&quot;multiselect-controls&quot;);e&amp;&amp;e.remove();const t=document.createElement(&quot;div&quot;);t.id=&quot;multiselect-controls&quot;,t.style.cssText=&quot;\n            position: fixed;\n            top: 50px;\n            right: 10px;\n            background: white;\n            border: 1px solid #ccc;\n            border-radius: 4px;\n            padding: 10px;\n            font-family: Arial, sans-serif;\n            font-size: 12px;\n            z-index: 10000;\n            box-shadow: 0 2px 8px rgba(0,0,0,0.2);\n            min-width: 200px;\n        &quot;,t.innerHTML=&#39;\n            &lt;div style=&quot;margin-bottom: 8px; font-weight: bold;&quot;&gt;\n                Multi-Select Controls\n                &lt;button id=&quot;close-bookmarklet&quot; style=&quot;float: right; background: #dc3545; color: white; border: none; border-radius: 2px; padding: 2px 6px; font-size: 11px; cursor: pointer;&quot; title=&quot;Close and destroy bookmarklet&quot;&gt;×&lt;/button&gt;\n            &lt;/div&gt;\n            &lt;button id=&quot;select-all-20&quot; style=&quot;margin: 2px; padding: 4px 8px; background: #0078d4; color: white; border: none; border-radius: 2px;&quot;&gt;Select 20&lt;/button&gt;\n            &lt;button id=&quot;select-all-available&quot; style=&quot;margin: 2px; padding: 4px 8px; background: #28a745; color: white; border: none; border-radius: 2px;&quot;&gt;Select All&lt;/button&gt;\n            &lt;button id=&quot;clear-selections&quot; style=&quot;margin: 2px; padding: 4px 8px;&quot;&gt;Clear All&lt;/button&gt;\n            &lt;button id=&quot;hide-controls&quot; style=&quot;margin: 2px; padding: 4px 8px;&quot;&gt;Hide&lt;/button&gt;\n            &lt;div style=&quot;margin-top: 8px; font-size: 11px; color: #666;&quot;&gt;Auto-select or Ctrl+Click rows individually&lt;/div&gt;\n        &#39;,document.body.appendChild(t),document.getElementById(&quot;select-all-20&quot;).onclick=()=&gt;s(20),document.getElementById(&quot;select-all-available&quot;).onclick=()=&gt;{s(document.querySelectorAll(&quot;tr[data-row-index]&quot;).length)},document.getElementById(&quot;clear-selections&quot;).onclick=r,document.getElementById(&quot;hide-controls&quot;).onclick=()=&gt;{t.style.display=&quot;none&quot;},document.getElementById(&quot;close-bookmarklet&quot;).onclick=()=&gt;{confirm(&quot;Close and destroy the multi-select bookmarklet?&quot;)&amp;&amp;a()}}(),l(),window.multiSelectDebug={getSelectedData:d,clearSelections:r,selectedRows:t,addClickHandlers:i,autoSelectRows:s,selectRow:n,deselectRow:o,destroyBookmarklet:a},console.log(&quot;Multi-select bookmarklet activated! Use buttons for auto-select or Ctrl+click for manual selection.&quot;)}();" class="btn btn-primary" title="Drag to bookmarks bar or right-click to bookmark">
+                                        📌 Add to Bookmarks
+                                    </a>
+                                    <button class="btn btn-secondary" onclick="copyFromTextarea('code-2', 'Multi-Select Table Rows')">
+                                        📋 Copy Code
+                                    </button>
+                                </div>
+                                <div class="bookmarklet-code">
+                                    <textarea readonly onclick="this.select()" class="code-textarea" id="code-2">javascript:!function(){"use strict";let e=20,t=new Set;function n(e){const n=e.getAttribute("data-row-index");if(t.has(n))return;t.add(n);const o=new MouseEvent("click",{bubbles:!0,cancelable:!0,ctrlKey:!0,view:window});e.removeEventListener("click",c,!0),e.dispatchEvent(o),setTimeout(()=>{e.addEventListener("click",c,!0)},10),e.classList.add("multi-selected")}function o(e){const n=e.getAttribute("data-row-index");if(t.has(n)){if(t.delete(n),e.classList.contains("selected")||"true"===e.getAttribute("aria-selected")){const t=new MouseEvent("click",{bubbles:!0,cancelable:!0,ctrlKey:!0,view:window});e.removeEventListener("click",c,!0),e.dispatchEvent(t),setTimeout(()=>{e.addEventListener("click",c,!0)},10)}e.classList.remove("multi-selected")}}function l(){const n=document.getElementById("multiselect-status");n&&(n.textContent=`Selected: ${t.size}/${e}`)}function c(c){const i=c.target.closest("tr[data-row-index]");if(!i)return;if(!c.ctrlKey)return;c.preventDefault(),c.stopPropagation();const r=i.getAttribute("data-row-index");if(t.has(r))o(i);else{if(t.size>=e)return void(confirm(`Maximum ${e} selections reached! Increase limit and continue?`)&&(e+=50,n(i)));n(i)}l()}function i(){document.querySelectorAll("tr[data-row-index]").forEach(e=>{e.addEventListener("click",c,!0)})}function r(){t.forEach(e=>{const t=document.querySelector(`tr[data-row-index="${e}"]`);t&&o(t)}),t.clear(),l()}function d(){const e=[];return t.forEach(t=>{const n=document.querySelector(`tr[data-row-index="${t}"]`);n&&e.push({rowIndex:t,element:n,text:n.textContent.trim()})}),e}function s(t=e){r();const o=document.querySelectorAll("tr[data-row-index]"),c=Math.min(t,o.length);t>e&&(e=t);for(let e=0;e<c;e++)setTimeout(()=>{const t=o[e];t&&(n(t),l()),e===c-1&&setTimeout(()=>{console.log(`Auto-selected ${c} rows`)},50)},20*e)}function a(){r();document.querySelectorAll("tr[data-row-index]").forEach(e=>{e.removeEventListener("click",c,!0),e.classList.remove("multi-selected")});const e=document.getElementById("multiselect-status"),n=document.getElementById("multiselect-controls");e&&e.remove(),n&&n.remove(),window.multiSelectDebug&&delete window.multiSelectDebug,t.clear(),console.log("Multi-select bookmarklet destroyed and cleaned up.")}document.querySelectorAll("tr.multi-selected").forEach(e=>{o(e)}),t.clear(),i(),function(){const e=document.getElementById("multiselect-status");e&&e.remove();const t=document.createElement("div");t.id="multiselect-status",t.style.cssText="\n            position: fixed;\n            top: 10px;\n            right: 10px;\n            background: #0078d4;\n            color: white;\n            padding: 8px 12px;\n            border-radius: 4px;\n            font-family: Arial, sans-serif;\n            font-size: 12px;\n            z-index: 10000;\n            box-shadow: 0 2px 8px rgba(0,0,0,0.2);\n        ",document.body.appendChild(t)}(),function(){const e=document.getElementById("multiselect-controls");e&&e.remove();const t=document.createElement("div");t.id="multiselect-controls",t.style.cssText="\n            position: fixed;\n            top: 50px;\n            right: 10px;\n            background: white;\n            border: 1px solid #ccc;\n            border-radius: 4px;\n            padding: 10px;\n            font-family: Arial, sans-serif;\n            font-size: 12px;\n            z-index: 10000;\n            box-shadow: 0 2px 8px rgba(0,0,0,0.2);\n            min-width: 200px;\n        ",t.innerHTML='\n            <div style="margin-bottom: 8px; font-weight: bold;">\n                Multi-Select Controls\n                <button id="close-bookmarklet" style="float: right; background: #dc3545; color: white; border: none; border-radius: 2px; padding: 2px 6px; font-size: 11px; cursor: pointer;" title="Close and destroy bookmarklet">×</button>\n            </div>\n            <button id="select-all-20" style="margin: 2px; padding: 4px 8px; background: #0078d4; color: white; border: none; border-radius: 2px;">Select 20</button>\n            <button id="select-all-available" style="margin: 2px; padding: 4px 8px; background: #28a745; color: white; border: none; border-radius: 2px;">Select All</button>\n            <button id="clear-selections" style="margin: 2px; padding: 4px 8px;">Clear All</button>\n            <button id="hide-controls" style="margin: 2px; padding: 4px 8px;">Hide</button>\n            <div style="margin-top: 8px; font-size: 11px; color: #666;">Auto-select or Ctrl+Click rows individually</div>\n        ',document.body.appendChild(t),document.getElementById("select-all-20").onclick=()=>s(20),document.getElementById("select-all-available").onclick=()=>{s(document.querySelectorAll("tr[data-row-index]").length)},document.getElementById("clear-selections").onclick=r,document.getElementById("hide-controls").onclick=()=>{t.style.display="none"},document.getElementById("close-bookmarklet").onclick=()=>{confirm("Close and destroy the multi-select bookmarklet?")&&a()}}(),l(),window.multiSelectDebug={getSelectedData:d,clearSelections:r,selectedRows:t,addClickHandlers:i,autoSelectRows:s,selectRow:n,deselectRow:o,destroyBookmarklet:a},console.log("Multi-select bookmarklet activated! Use buttons for auto-select or Ctrl+click for manual selection.")}();</textarea>
+                                </div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+                <div class="category">
+                    <div class="category-header">Development (1)</div>
+                    <div class="bookmarklets-grid">
+                        
+                            <div class="bookmarklet">
+                                <div class="bookmarklet-name">Page Analyzer Template</div>
+                                <div class="bookmarklet-description">Interactive page analyzer with UI box, statistics, fun facts, and page interaction tools. Perfect template for building new bookmarklets.</div>
+                                <div class="bookmarklet-meta">
+                                    <span>by chrisribe</span>
+                                    <span class="bookmarklet-size">8957 bytes</span>
+                                </div>
+                                <div class="bookmarklet-actions">
+                                    <a href="javascript:!function(){&quot;use strict&quot;;const n=&quot;page-analyzer&quot;,r=n+&quot;-&quot;+function(n){let r=0;for(let e=0;e&lt;n.length;e++){r=(r&lt;&lt;5)-r+n.charCodeAt(e),r&amp;=r}return Math.abs(r).toString(36)}(n);try{const e=document.getElementById(r);e&amp;&amp;e.remove();const t=document.getElementById(r+&quot;-styles&quot;);function s(){const n={divs:document.querySelectorAll(&quot;div&quot;).length,images:document.querySelectorAll(&quot;img&quot;).length,links:document.querySelectorAll(&quot;a&quot;).length,buttons:document.querySelectorAll(&quot;button&quot;).length,inputs:document.querySelectorAll(&quot;input&quot;).length,scripts:document.querySelectorAll(&quot;script&quot;).length,stylesheets:document.querySelectorAll(&#39;link[rel=&quot;stylesheet&quot;]&#39;).length,title:document.title||&quot;No title&quot;,url:window.location.href,domain:window.location.hostname,wordCount:document.body?document.body.innerText.split(/\s+/).filter(n=&gt;n.length&gt;0).length:0,scrollHeight:document.documentElement.scrollHeight,viewportHeight:window.innerHeight},r=[];return n.divs&gt;100&amp;&amp;r.push(`🏗️ This page is div-heavy with ${n.divs} divs!`),n.images&gt;20&amp;&amp;r.push(`📸 Image-rich page with ${n.images} images`),n.wordCount&gt;1e3&amp;&amp;r.push(`📚 Long read: ~${Math.round(n.wordCount/200)} min read time`),n.scrollHeight&gt;3*n.viewportHeight&amp;&amp;r.push(`📜 Tall page: ${Math.round(n.scrollHeight/n.viewportHeight)}x viewport height`),n.scripts&gt;10&amp;&amp;r.push(`⚡ Script-heavy: ${n.scripts} JavaScript files`),{stats:n,facts:r}}t&amp;&amp;t.remove();let o=!1;function i(){const n=document.getElementById(r+&quot;-toggle-divs&quot;),e=n.querySelector(&quot;.toggle-text&quot;);o?(document.querySelectorAll(&quot;div&quot;).forEach(n=&gt;{n.style.outline=&quot;&quot;,n.style.outlineOffset=&quot;&quot;}),n.classList.remove(&quot;active&quot;),e.textContent=&quot;Highlight Divs&quot;,o=!1):(document.querySelectorAll(&quot;div&quot;).forEach(n=&gt;{n.id!==r&amp;&amp;(n.style.outline=&quot;2px solid red&quot;,n.style.outlineOffset=&quot;1px&quot;)}),n.classList.add(&quot;active&quot;),e.textContent=&quot;Remove Highlights&quot;,o=!0)}function a(){l()}function l(){const{stats:n,facts:e}=s(),t={divs:n.divs,images:n.images,links:n.links,scripts:n.scripts,words:n.wordCount,domain:n.domain};Object.entries(t).forEach(([n,e])=&gt;{const t=document.getElementById(r+&quot;-&quot;+n);t&amp;&amp;(t.textContent=e)});const o=document.getElementById(r+&quot;-facts&quot;);o&amp;&amp;(o.innerHTML=e.length&gt;0?e.map(n=&gt;`&lt;div class=&quot;fact-item&quot;&gt;${n}&lt;/div&gt;`).join(&quot;&quot;):&#39;&lt;div class=&quot;fact-item&quot;&gt;✨ This is a clean, well-structured page!&lt;/div&gt;&#39;)}const c=&#39;&lt;div id=&quot;{{BOOKMARKLET_ID}}&quot;&gt;\r\n    &lt;div class=&quot;header&quot;&gt;\r\n        &lt;h3&gt;📊 Page Analyzer&lt;/h3&gt;\r\n        &lt;button class=&quot;close-btn&quot; onclick=&quot;{{CLOSE_HANDLER}}&quot;&gt;×&lt;/button&gt;\r\n    &lt;/div&gt;\r\n    \r\n    &lt;div class=&quot;content&quot;&gt;\r\n        &lt;div class=&quot;stats-grid&quot;&gt;\r\n            &lt;div class=&quot;stat-item&quot;&gt;\r\n                &lt;span class=&quot;stat-label&quot;&gt;Elements:&lt;/span&gt;\r\n                &lt;span class=&quot;stat-value&quot; id=&quot;{{BOOKMARKLET_ID}}-divs&quot;&gt;-&lt;/span&gt;\r\n            &lt;/div&gt;\r\n            &lt;div class=&quot;stat-item&quot;&gt;\r\n                &lt;span class=&quot;stat-label&quot;&gt;Images:&lt;/span&gt;\r\n                &lt;span class=&quot;stat-value&quot; id=&quot;{{BOOKMARKLET_ID}}-images&quot;&gt;-&lt;/span&gt;\r\n            &lt;/div&gt;\r\n            &lt;div class=&quot;stat-item&quot;&gt;\r\n                &lt;span class=&quot;stat-label&quot;&gt;Links:&lt;/span&gt;\r\n                &lt;span class=&quot;stat-value&quot; id=&quot;{{BOOKMARKLET_ID}}-links&quot;&gt;-&lt;/span&gt;\r\n            &lt;/div&gt;\r\n            &lt;div class=&quot;stat-item&quot;&gt;\r\n                &lt;span class=&quot;stat-label&quot;&gt;Scripts:&lt;/span&gt;\r\n                &lt;span class=&quot;stat-value&quot; id=&quot;{{BOOKMARKLET_ID}}-scripts&quot;&gt;-&lt;/span&gt;\r\n            &lt;/div&gt;\r\n            &lt;div class=&quot;stat-item&quot;&gt;\r\n                &lt;span class=&quot;stat-label&quot;&gt;Words:&lt;/span&gt;\r\n                &lt;span class=&quot;stat-value&quot; id=&quot;{{BOOKMARKLET_ID}}-words&quot;&gt;-&lt;/span&gt;\r\n            &lt;/div&gt;\r\n            &lt;div class=&quot;stat-item&quot;&gt;\r\n                &lt;span class=&quot;stat-label&quot;&gt;Domain:&lt;/span&gt;\r\n                &lt;span class=&quot;stat-value&quot; id=&quot;{{BOOKMARKLET_ID}}-domain&quot;&gt;-&lt;/span&gt;\r\n            &lt;/div&gt;\r\n        &lt;/div&gt;\r\n        \r\n        &lt;div class=&quot;facts-section&quot;&gt;\r\n            &lt;h4&gt;🎯 Page Insights&lt;/h4&gt;\r\n            &lt;div id=&quot;{{BOOKMARKLET_ID}}-facts&quot; class=&quot;facts-list&quot;&gt;\r\n                \x3c!-- Facts will be populated by JavaScript --\x3e\r\n            &lt;/div&gt;\r\n        &lt;/div&gt;\r\n        \r\n        &lt;div class=&quot;controls&quot;&gt;\r\n            &lt;button class=&quot;toggle-btn&quot; id=&quot;{{BOOKMARKLET_ID}}-toggle-divs&quot; onclick=&quot;{{TOGGLE_DIVS_HANDLER}}&quot;&gt;\r\n                &lt;span class=&quot;toggle-text&quot;&gt;Highlight Divs&lt;/span&gt;\r\n            &lt;/button&gt;\r\n            &lt;button class=&quot;action-btn&quot; onclick=&quot;{{REFRESH_HANDLER}}&quot;&gt;🔄 Refresh&lt;/button&gt;\r\n        &lt;/div&gt;\r\n    &lt;/div&gt;\r\n&lt;/div&gt;\r\n&#39;,d=&quot;#{{BOOKMARKLET_ID}} {\r\n    position: fixed;\r\n    top: 20px;\r\n    right: 20px;\r\n    width: 320px;\r\n    max-height: 80vh;\r\n    background: rgba(255, 255, 255, 0.98);\r\n    backdrop-filter: blur(20px);\r\n    border: 1px solid rgba(0, 0, 0, 0.1);\r\n    border-radius: 12px;\r\n    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);\r\n    font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, sans-serif;\r\n    font-size: 14px;\r\n    line-height: 1.4;\r\n    color: #1d1d1f;\r\n    z-index: 999999;\r\n    overflow: hidden;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .header {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    padding: 16px 20px;\r\n    border-bottom: 1px solid rgba(0, 0, 0, 0.1);\r\n    background: rgba(247, 247, 247, 0.8);\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .header h3 {\r\n    margin: 0;\r\n    font-size: 16px;\r\n    font-weight: 600;\r\n    color: #1d1d1f;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .close-btn {\r\n    background: none;\r\n    border: none;\r\n    font-size: 20px;\r\n    color: #8e8e93;\r\n    cursor: pointer;\r\n    padding: 0;\r\n    width: 24px;\r\n    height: 24px;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    border-radius: 6px;\r\n    transition: all 0.2s ease;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .close-btn:hover {\r\n    background: rgba(0, 0, 0, 0.1);\r\n    color: #1d1d1f;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .content {\r\n    padding: 20px;\r\n    max-height: calc(80vh - 70px);\r\n    overflow-y: auto;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .stats-grid {\r\n    display: grid;\r\n    grid-template-columns: 1fr 1fr;\r\n    gap: 12px;\r\n    margin-bottom: 20px;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .stat-item {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    padding: 8px 12px;\r\n    background: rgba(0, 122, 255, 0.08);\r\n    border-radius: 8px;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .stat-label {\r\n    font-weight: 500;\r\n    color: #1d1d1f;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .stat-value {\r\n    font-weight: 600;\r\n    color: #007aff;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .facts-section {\r\n    margin-bottom: 20px;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .facts-section h4 {\r\n    margin: 0 0 12px 0;\r\n    font-size: 14px;\r\n    font-weight: 600;\r\n    color: #1d1d1f;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .facts-list {\r\n    display: flex;\r\n    flex-direction: column;\r\n    gap: 8px;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .fact-item {\r\n    padding: 8px 12px;\r\n    background: rgba(52, 199, 89, 0.08);\r\n    border-radius: 6px;\r\n    font-size: 13px;\r\n    color: #1d1d1f;\r\n    border-left: 3px solid #34c759;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .controls {\r\n    display: flex;\r\n    flex-direction: column;\r\n    gap: 8px;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .toggle-btn, #{{BOOKMARKLET_ID}} .action-btn {\r\n    padding: 10px 16px;\r\n    border: 1px solid rgba(0, 122, 255, 0.3);\r\n    border-radius: 8px;\r\n    background: rgba(0, 122, 255, 0.08);\r\n    color: #007aff;\r\n    font-size: 13px;\r\n    font-weight: 500;\r\n    cursor: pointer;\r\n    transition: all 0.2s ease;\r\n    text-align: center;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .toggle-btn:hover, #{{BOOKMARKLET_ID}} .action-btn:hover {\r\n    background: rgba(0, 122, 255, 0.15);\r\n    border-color: rgba(0, 122, 255, 0.5);\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .toggle-btn.active {\r\n    background: #007aff;\r\n    color: white;\r\n    border-color: #007aff;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .toggle-btn.active:hover {\r\n    background: #0056cc;\r\n    border-color: #0056cc;\r\n}\r\n&quot;.replace(/\{\{BOOKMARKLET_ID\}\}/g,r),g=document.createElement(&quot;style&quot;);g.textContent=d,g.id=r+&quot;-styles&quot;,document.head.appendChild(g);const p=r.replace(/-/g,&quot;_&quot;),u=document.createElement(&quot;div&quot;);u.innerHTML=c.replace(/\{\{BOOKMARKLET_ID\}\}/g,r).replace(/\{\{CLOSE_HANDLER\}\}/g,`(function(){document.getElementById(&#39;${r}&#39;).remove();document.getElementById(&#39;${r}-styles&#39;).remove();})()`).replace(/\{\{TOGGLE_DIVS_HANDLER\}\}/g,`window.${p}_toggleDivs()`).replace(/\{\{REFRESH_HANDLER\}\}/g,`window.${p}_refresh()`),document.body.appendChild(u.firstElementChild),console.log(&quot;Page Analyzer loaded with ID:&quot;,r),console.log(&quot;Panel element:&quot;,document.getElementById(r)),window[p+&quot;_toggleDivs&quot;]=i,window[p+&quot;_refresh&quot;]=a,l()}catch(h){console.error(&quot;Page Analyzer Error:&quot;,h),alert(&quot;Page Analyzer encountered an error. Check the console for details.&quot;)}}();" class="btn btn-primary" title="Drag to bookmarks bar or right-click to bookmark">
+                                        📌 Add to Bookmarks
+                                    </a>
+                                    <button class="btn btn-secondary" onclick="copyFromTextarea('code-3', 'Page Analyzer Template')">
+                                        📋 Copy Code
+                                    </button>
+                                </div>
+                                <div class="bookmarklet-code">
+                                    <textarea readonly onclick="this.select()" class="code-textarea" id="code-3">javascript:!function(){"use strict";const n="page-analyzer",r=n+"-"+function(n){let r=0;for(let e=0;e<n.length;e++){r=(r<<5)-r+n.charCodeAt(e),r&=r}return Math.abs(r).toString(36)}(n);try{const e=document.getElementById(r);e&&e.remove();const t=document.getElementById(r+"-styles");function s(){const n={divs:document.querySelectorAll("div").length,images:document.querySelectorAll("img").length,links:document.querySelectorAll("a").length,buttons:document.querySelectorAll("button").length,inputs:document.querySelectorAll("input").length,scripts:document.querySelectorAll("script").length,stylesheets:document.querySelectorAll('link[rel="stylesheet"]').length,title:document.title||"No title",url:window.location.href,domain:window.location.hostname,wordCount:document.body?document.body.innerText.split(/\s+/).filter(n=>n.length>0).length:0,scrollHeight:document.documentElement.scrollHeight,viewportHeight:window.innerHeight},r=[];return n.divs>100&&r.push(`🏗️ This page is div-heavy with ${n.divs} divs!`),n.images>20&&r.push(`📸 Image-rich page with ${n.images} images`),n.wordCount>1e3&&r.push(`📚 Long read: ~${Math.round(n.wordCount/200)} min read time`),n.scrollHeight>3*n.viewportHeight&&r.push(`📜 Tall page: ${Math.round(n.scrollHeight/n.viewportHeight)}x viewport height`),n.scripts>10&&r.push(`⚡ Script-heavy: ${n.scripts} JavaScript files`),{stats:n,facts:r}}t&&t.remove();let o=!1;function i(){const n=document.getElementById(r+"-toggle-divs"),e=n.querySelector(".toggle-text");o?(document.querySelectorAll("div").forEach(n=>{n.style.outline="",n.style.outlineOffset=""}),n.classList.remove("active"),e.textContent="Highlight Divs",o=!1):(document.querySelectorAll("div").forEach(n=>{n.id!==r&&(n.style.outline="2px solid red",n.style.outlineOffset="1px")}),n.classList.add("active"),e.textContent="Remove Highlights",o=!0)}function a(){l()}function l(){const{stats:n,facts:e}=s(),t={divs:n.divs,images:n.images,links:n.links,scripts:n.scripts,words:n.wordCount,domain:n.domain};Object.entries(t).forEach(([n,e])=>{const t=document.getElementById(r+"-"+n);t&&(t.textContent=e)});const o=document.getElementById(r+"-facts");o&&(o.innerHTML=e.length>0?e.map(n=>`<div class="fact-item">${n}</div>`).join(""):'<div class="fact-item">✨ This is a clean, well-structured page!</div>')}const c='<div id="{{BOOKMARKLET_ID}}">\r\n    <div class="header">\r\n        <h3>📊 Page Analyzer</h3>\r\n        <button class="close-btn" onclick="{{CLOSE_HANDLER}}">×</button>\r\n    </div>\r\n    \r\n    <div class="content">\r\n        <div class="stats-grid">\r\n            <div class="stat-item">\r\n                <span class="stat-label">Elements:</span>\r\n                <span class="stat-value" id="{{BOOKMARKLET_ID}}-divs">-</span>\r\n            </div>\r\n            <div class="stat-item">\r\n                <span class="stat-label">Images:</span>\r\n                <span class="stat-value" id="{{BOOKMARKLET_ID}}-images">-</span>\r\n            </div>\r\n            <div class="stat-item">\r\n                <span class="stat-label">Links:</span>\r\n                <span class="stat-value" id="{{BOOKMARKLET_ID}}-links">-</span>\r\n            </div>\r\n            <div class="stat-item">\r\n                <span class="stat-label">Scripts:</span>\r\n                <span class="stat-value" id="{{BOOKMARKLET_ID}}-scripts">-</span>\r\n            </div>\r\n            <div class="stat-item">\r\n                <span class="stat-label">Words:</span>\r\n                <span class="stat-value" id="{{BOOKMARKLET_ID}}-words">-</span>\r\n            </div>\r\n            <div class="stat-item">\r\n                <span class="stat-label">Domain:</span>\r\n                <span class="stat-value" id="{{BOOKMARKLET_ID}}-domain">-</span>\r\n            </div>\r\n        </div>\r\n        \r\n        <div class="facts-section">\r\n            <h4>🎯 Page Insights</h4>\r\n            <div id="{{BOOKMARKLET_ID}}-facts" class="facts-list">\r\n                \x3c!-- Facts will be populated by JavaScript --\x3e\r\n            </div>\r\n        </div>\r\n        \r\n        <div class="controls">\r\n            <button class="toggle-btn" id="{{BOOKMARKLET_ID}}-toggle-divs" onclick="{{TOGGLE_DIVS_HANDLER}}">\r\n                <span class="toggle-text">Highlight Divs</span>\r\n            </button>\r\n            <button class="action-btn" onclick="{{REFRESH_HANDLER}}">🔄 Refresh</button>\r\n        </div>\r\n    </div>\r\n</div>\r\n',d="#{{BOOKMARKLET_ID}} {\r\n    position: fixed;\r\n    top: 20px;\r\n    right: 20px;\r\n    width: 320px;\r\n    max-height: 80vh;\r\n    background: rgba(255, 255, 255, 0.98);\r\n    backdrop-filter: blur(20px);\r\n    border: 1px solid rgba(0, 0, 0, 0.1);\r\n    border-radius: 12px;\r\n    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);\r\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\r\n    font-size: 14px;\r\n    line-height: 1.4;\r\n    color: #1d1d1f;\r\n    z-index: 999999;\r\n    overflow: hidden;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .header {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    padding: 16px 20px;\r\n    border-bottom: 1px solid rgba(0, 0, 0, 0.1);\r\n    background: rgba(247, 247, 247, 0.8);\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .header h3 {\r\n    margin: 0;\r\n    font-size: 16px;\r\n    font-weight: 600;\r\n    color: #1d1d1f;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .close-btn {\r\n    background: none;\r\n    border: none;\r\n    font-size: 20px;\r\n    color: #8e8e93;\r\n    cursor: pointer;\r\n    padding: 0;\r\n    width: 24px;\r\n    height: 24px;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    border-radius: 6px;\r\n    transition: all 0.2s ease;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .close-btn:hover {\r\n    background: rgba(0, 0, 0, 0.1);\r\n    color: #1d1d1f;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .content {\r\n    padding: 20px;\r\n    max-height: calc(80vh - 70px);\r\n    overflow-y: auto;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .stats-grid {\r\n    display: grid;\r\n    grid-template-columns: 1fr 1fr;\r\n    gap: 12px;\r\n    margin-bottom: 20px;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .stat-item {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    padding: 8px 12px;\r\n    background: rgba(0, 122, 255, 0.08);\r\n    border-radius: 8px;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .stat-label {\r\n    font-weight: 500;\r\n    color: #1d1d1f;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .stat-value {\r\n    font-weight: 600;\r\n    color: #007aff;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .facts-section {\r\n    margin-bottom: 20px;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .facts-section h4 {\r\n    margin: 0 0 12px 0;\r\n    font-size: 14px;\r\n    font-weight: 600;\r\n    color: #1d1d1f;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .facts-list {\r\n    display: flex;\r\n    flex-direction: column;\r\n    gap: 8px;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .fact-item {\r\n    padding: 8px 12px;\r\n    background: rgba(52, 199, 89, 0.08);\r\n    border-radius: 6px;\r\n    font-size: 13px;\r\n    color: #1d1d1f;\r\n    border-left: 3px solid #34c759;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .controls {\r\n    display: flex;\r\n    flex-direction: column;\r\n    gap: 8px;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .toggle-btn, #{{BOOKMARKLET_ID}} .action-btn {\r\n    padding: 10px 16px;\r\n    border: 1px solid rgba(0, 122, 255, 0.3);\r\n    border-radius: 8px;\r\n    background: rgba(0, 122, 255, 0.08);\r\n    color: #007aff;\r\n    font-size: 13px;\r\n    font-weight: 500;\r\n    cursor: pointer;\r\n    transition: all 0.2s ease;\r\n    text-align: center;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .toggle-btn:hover, #{{BOOKMARKLET_ID}} .action-btn:hover {\r\n    background: rgba(0, 122, 255, 0.15);\r\n    border-color: rgba(0, 122, 255, 0.5);\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .toggle-btn.active {\r\n    background: #007aff;\r\n    color: white;\r\n    border-color: #007aff;\r\n}\r\n\r\n#{{BOOKMARKLET_ID}} .toggle-btn.active:hover {\r\n    background: #0056cc;\r\n    border-color: #0056cc;\r\n}\r\n".replace(/\{\{BOOKMARKLET_ID\}\}/g,r),g=document.createElement("style");g.textContent=d,g.id=r+"-styles",document.head.appendChild(g);const p=r.replace(/-/g,"_"),u=document.createElement("div");u.innerHTML=c.replace(/\{\{BOOKMARKLET_ID\}\}/g,r).replace(/\{\{CLOSE_HANDLER\}\}/g,`(function(){document.getElementById('${r}').remove();document.getElementById('${r}-styles').remove();})()`).replace(/\{\{TOGGLE_DIVS_HANDLER\}\}/g,`window.${p}_toggleDivs()`).replace(/\{\{REFRESH_HANDLER\}\}/g,`window.${p}_refresh()`),document.body.appendChild(u.firstElementChild),console.log("Page Analyzer loaded with ID:",r),console.log("Panel element:",document.getElementById(r)),window[p+"_toggleDivs"]=i,window[p+"_refresh"]=a,l()}catch(h){console.error("Page Analyzer Error:",h),alert("Page Analyzer encountered an error. Check the console for details.")}}();</textarea>
+                                </div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+
+        <footer>
+            <p>Generated on 2025-07-29, 9:53:05 a.m. | Total bookmarklets: 4</p>
+            <p>Build this collection with <code>npm run build</code></p>
+        </footer>
+    </div>
+
+    <script>
+        function copyFromTextarea(textareaId, name) {
+            const textarea = document.getElementById(textareaId);
+            if (!textarea) {
+                alert('Could not find code to copy.');
+                return;
+            }
+            
+            const code = textarea.value;
+            navigator.clipboard.writeText(code).then(function() {
+                // Show temporary success message
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '✅ Copied!';
+                button.style.background = '#27ae60';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
+            }).catch(function(err) {
+                // Fallback: select the textarea content
+                textarea.select();
+                textarea.setSelectionRange(0, 99999); // For mobile devices
+                
+                try {
+                    document.execCommand('copy');
+                    const button = event.target;
+                    const originalText = button.textContent;
+                    button.textContent = '✅ Copied!';
+                    button.style.background = '#27ae60';
+                    
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.style.background = '';
+                    }, 2000);
+                } catch (err) {
+                    alert('Failed to copy to clipboard. Please copy manually from the text box.');
+                }
+                console.error('Copy failed:', err);
+            });
+        }
+
+        // Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📚 Bookmarklets Collection loaded');
+            console.log('Available bookmarklets:', ["Azure Container Delete Commands","Azure Select & Delete Top 10","Multi-Select Table Rows","Page Analyzer Template"]);
+        });
+    </script>
+</body>
+</html>

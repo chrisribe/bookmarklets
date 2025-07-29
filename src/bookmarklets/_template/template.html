@@ -1,0 +1,49 @@
+<div id="{{BOOKMARKLET_ID}}">
+    <div class="header">
+        <h3>📊 Page Analyzer</h3>
+        <button class="close-btn" onclick="{{CLOSE_HANDLER}}">×</button>
+    </div>
+    
+    <div class="content">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-label">Elements:</span>
+                <span class="stat-value" id="{{BOOKMARKLET_ID}}-divs">-</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Images:</span>
+                <span class="stat-value" id="{{BOOKMARKLET_ID}}-images">-</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Links:</span>
+                <span class="stat-value" id="{{BOOKMARKLET_ID}}-links">-</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Scripts:</span>
+                <span class="stat-value" id="{{BOOKMARKLET_ID}}-scripts">-</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Words:</span>
+                <span class="stat-value" id="{{BOOKMARKLET_ID}}-words">-</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Domain:</span>
+                <span class="stat-value" id="{{BOOKMARKLET_ID}}-domain">-</span>
+            </div>
+        </div>
+        
+        <div class="facts-section">
+            <h4>🎯 Page Insights</h4>
+            <div id="{{BOOKMARKLET_ID}}-facts" class="facts-list">
+                <!-- Facts will be populated by JavaScript -->
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="toggle-btn" id="{{BOOKMARKLET_ID}}-toggle-divs" onclick="{{TOGGLE_DIVS_HANDLER}}">
+                <span class="toggle-text">Highlight Divs</span>
+            </button>
+            <button class="action-btn" onclick="{{REFRESH_HANDLER}}">🔄 Refresh</button>
+        </div>
+    </div>
+</div>

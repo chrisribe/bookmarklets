@@ -1,0 +1,8 @@
+{
+    "name": "Multi-Select Table Rows",
+    "description": "Enable multi-selection of table rows with data-row-index attributes using Ctrl+Click. Includes auto-select options and a control panel.",
+    "category": "Azure DevOps",
+    "author": "chrisribe",
+    "version": "1.0.0",
+    "tags": ["table", "selection", "UI", "productivity"]
+}

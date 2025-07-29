@@ -1,0 +1,8 @@
+{
+    "name": "Page Analyzer Template",
+    "description": "Interactive page analyzer with UI box, statistics, fun facts, and page interaction tools. Perfect template for building new bookmarklets.",
+    "category": "Development",
+    "author": "chrisribe",
+    "version": "1.0.0",
+    "tags": ["template", "development", "page-analysis", "ui", "interactive"]
+}
