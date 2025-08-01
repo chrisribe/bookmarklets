@@ -4,7 +4,7 @@ A well-organized collection of useful browser bookmarklets with a modern build s
 
 ## 🌐 Live Demo
 
-**👉 [Browse and Install Bookmarklets](https://chrisribe.github.io/bookmarklets/)**
+**👉 [Browse and Install Bookmarklets](https://chrisribe.github.io/bookmarklets/dist/)**
 
 Visit the live page to see all available bookmarklets with easy installation options.
 
@@ -21,7 +21,7 @@ Visit the live page to see all available bookmarklets with easy installation opt
    ```
 
 3. **Browse and install bookmarklets:**
-   - **Live site:** Visit [https://chrisribe.github.io/bookmarklets/](https://chrisribe.github.io/bookmarklets/)
+   - **Live site:** Visit [https://chrisribe.github.io/bookmarklets/dist/](https://chrisribe.github.io/bookmarklets/dist/)
    - **Local:** Open `dist/index.html` in your browser
 
 ## 📁 Project Structure
@@ -119,7 +119,7 @@ npm run dev
 
 ## 📝 Usage Instructions
 
-**🌐 Easy way:** Visit [https://chrisribe.github.io/bookmarklets/](https://chrisribe.github.io/bookmarklets/) and use the drag-and-drop interface.
+**🌐 Easy way:** Visit [https://chrisribe.github.io/bookmarklets/dist/](https://chrisribe.github.io/bookmarklets/dist/) and use the drag-and-drop interface.
 
 **📁 Local way:** Use the methods below with your locally built `dist/index.html`:
 
