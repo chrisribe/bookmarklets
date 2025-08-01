@@ -1,0 +1,8 @@
+{
+    "name": "Azure Container Delete Commands",
+    "description": "Generate Azure CLI commands to delete all containers in a storage account. Outputs bash script to console for batch deletion.",
+    "category": "Azure",
+    "author": "chrisribe",
+    "version": "1.0.0",
+    "tags": ["azure", "storage", "containers", "delete", "cli"]
+}

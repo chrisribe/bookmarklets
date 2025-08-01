@@ -1,0 +1,8 @@
+{
+    "name": "Azure Select & Delete Top 10",
+    "description": "Automatically select the top 10 items in an Azure portal grid and trigger the delete action. Useful for bulk cleanup operations.",
+    "category": "Azure",
+    "author": "chrisribe",
+    "version": "1.0.0",
+    "tags": ["azure", "portal", "bulk", "delete", "automation"]
+}

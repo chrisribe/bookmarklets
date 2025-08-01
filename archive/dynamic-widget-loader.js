@@ -89,4 +89,4 @@ window.bmCore = (function() {
         loadWidget: loadWidget
 	};
 })();
-bmCore.setConfig({app:{name:"demo",folder:"demo"}})
+bmCore.setConfig({app:{name:"demo",folder:"demo"}});

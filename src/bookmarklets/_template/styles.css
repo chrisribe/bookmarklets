@@ -1,0 +1,148 @@
+#{{BOOKMARKLET_ID}} {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 320px;
+    max-height: 80vh;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #1d1d1f;
+    z-index: 999999;
+    overflow: hidden;
+}
+
+#{{BOOKMARKLET_ID}} .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    background: rgba(247, 247, 247, 0.8);
+}
+
+#{{BOOKMARKLET_ID}} .header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1d1d1f;
+}
+
+#{{BOOKMARKLET_ID}} .close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #8e8e93;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+#{{BOOKMARKLET_ID}} .close-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #1d1d1f;
+}
+
+#{{BOOKMARKLET_ID}} .content {
+    padding: 20px;
+    max-height: calc(80vh - 70px);
+    overflow-y: auto;
+}
+
+#{{BOOKMARKLET_ID}} .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+#{{BOOKMARKLET_ID}} .stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: rgba(0, 122, 255, 0.08);
+    border-radius: 8px;
+}
+
+#{{BOOKMARKLET_ID}} .stat-label {
+    font-weight: 500;
+    color: #1d1d1f;
+}
+
+#{{BOOKMARKLET_ID}} .stat-value {
+    font-weight: 600;
+    color: #007aff;
+}
+
+#{{BOOKMARKLET_ID}} .facts-section {
+    margin-bottom: 20px;
+}
+
+#{{BOOKMARKLET_ID}} .facts-section h4 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d1d1f;
+}
+
+#{{BOOKMARKLET_ID}} .facts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#{{BOOKMARKLET_ID}} .fact-item {
+    padding: 8px 12px;
+    background: rgba(52, 199, 89, 0.08);
+    border-radius: 6px;
+    font-size: 13px;
+    color: #1d1d1f;
+    border-left: 3px solid #34c759;
+}
+
+#{{BOOKMARKLET_ID}} .controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#{{BOOKMARKLET_ID}} .toggle-btn, #{{BOOKMARKLET_ID}} .action-btn {
+    padding: 10px 16px;
+    border: 1px solid rgba(0, 122, 255, 0.3);
+    border-radius: 8px;
+    background: rgba(0, 122, 255, 0.08);
+    color: #007aff;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+#{{BOOKMARKLET_ID}} .toggle-btn:hover, #{{BOOKMARKLET_ID}} .action-btn:hover {
+    background: rgba(0, 122, 255, 0.15);
+    border-color: rgba(0, 122, 255, 0.5);
+}
+
+#{{BOOKMARKLET_ID}} .toggle-btn.active {
+    background: #007aff;
+    color: white;
+    border-color: #007aff;
+}
+
+#{{BOOKMARKLET_ID}} .toggle-btn.active:hover {
+    background: #0056cc;
+    border-color: #0056cc;
+}
