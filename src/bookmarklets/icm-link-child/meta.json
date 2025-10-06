@@ -1,0 +1,6 @@
+{
+  "name": "IcM Link Child Incident",
+  "description": "Automates linking a child incident in Microsoft IcM portal. Clicks Links > Child > Add link, then pastes from clipboard and selects the incident.",
+  "category": "IcM",
+  "author": "chrisribe"
+}
