@@ -39,6 +39,9 @@ bookmarklets/
 │   │   │   └── meta.json          # Metadata (name, description, etc.)
 │   │   ├── azure-container-delete-cmds/
 │   │   └── azure-select-delete-top10/
+│   ├── lib/                       # Shared helper functions
+│   │   ├── helpers.js             # Reusable utility functions
+│   │   └── README.md              # Library documentation
 │   ├── loader/                    # Demo/testing environment
 │   └── core.js                    # Shared utilities
 ├── build.js                       # Build script
@@ -95,9 +98,30 @@ bookmarklets/
 
 - **Automatic minification** using Terser
 - **Metadata support** for rich descriptions and categorization
+- **Shared library system** - Reusable helper functions auto-injected from `src/lib/helpers.js`
+- **Smart dependency detection** - Only includes helpers your bookmarklet actually uses
 - **Browser interface generation** with searchable bookmarklet library
 - **Size optimization** and reporting
 - **Error handling** during build process
+
+### Shared Library System
+
+The build system includes a shared library of helper functions (`src/lib/helpers.js`) that can be used across all bookmarklets:
+
+- **No duplication** - Define helper functions once, use everywhere
+- **Auto-injection** - Build system detects which helpers you use and includes them automatically
+- **Zero overhead** - Only functions you actually call are included in the final bookmarklet
+- **Self-contained** - Final bookmarklets have no external dependencies
+
+Available helpers include: `waitForElement()`, `delay()`, `clickAndWait()`, `findElementByText()`, and more. See [src/lib/README.md](src/lib/README.md) for full documentation.
+
+**Example:**
+```javascript
+// Just use the helpers - they're automatically injected!
+const button = await waitForElement('button.submit');
+await delay(500);
+await clickAndWait(button);
+```
 
 ## 🌐 Browser Interface Features
 

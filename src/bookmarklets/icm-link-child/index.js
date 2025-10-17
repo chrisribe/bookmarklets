@@ -1,37 +1,6 @@
 (function() {
     'use strict';
     
-    // Helper to wait for element
-    function waitForElement(selector, timeout = 5000) {
-        return new Promise((resolve, reject) => {
-            const element = document.querySelector(selector);
-            if (element) return resolve(element);
-            
-            const observer = new MutationObserver(() => {
-                const el = document.querySelector(selector);
-                if (el) {
-                    observer.disconnect();
-                    resolve(el);
-                }
-            });
-            
-            observer.observe(document.body, { childList: true, subtree: true });
-            
-            setTimeout(() => {
-                observer.disconnect();
-                reject(new Error(`Timeout waiting for ${selector}`));
-            }, timeout);
-        });
-    }
-    
-    // Helper to click and wait
-    function clickAndWait(element, delay = 300) {
-        return new Promise(resolve => {
-            element.click();
-            setTimeout(resolve, delay);
-        });
-    }
-    
     // Main workflow
     async function linkChildIncident() {
         try {
@@ -69,7 +38,7 @@
             
             // Step 4: Focus on search box and paste
             console.log('4. Focusing search box and pasting...');
-            const searchBox = await waitForElement('input.ms-SearchBox-field[placeholder*="Search incident"]', 3000);
+            const searchBox = await waitForElementObserver('input.ms-SearchBox-field[placeholder*="Search incident"]', 3000);
             searchBox.focus();
             
             // Get clipboard content
@@ -83,7 +52,7 @@
             console.log('5. Waiting for search results...');
             await new Promise(resolve => setTimeout(resolve, 2000));
             
-            const checkbox = await waitForElement('input[type="checkbox"]', 8000);
+            const checkbox = await waitForElementObserver('input[type="checkbox"]', 8000);
             if (checkbox && !checkbox.checked) {
                 checkbox.click();
                 console.log('✓ Checkbox selected');

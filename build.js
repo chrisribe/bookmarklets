@@ -4,10 +4,86 @@ const { minify } = require('terser');
 
 const srcDir = path.join(__dirname, 'src', 'bookmarklets');
 const distDir = path.join(__dirname, 'dist');
+const libDir = path.join(__dirname, 'src', 'lib');
 
 // Ensure dist directory exists
 if (!fs.existsSync(distDir)) {
     fs.mkdirSync(distDir, { recursive: true });
+}
+
+// Load shared helpers library
+const helpersPath = path.join(libDir, 'helpers.js');
+let helpers = {};
+if (fs.existsSync(helpersPath)) {
+    const helpersCode = fs.readFileSync(helpersPath, 'utf8');
+    // Extract individual helper functions with their JSDoc comments
+    const functionRegex = /\/\*\*[\s\S]*?\*\/\s*function\s+(\w+)\s*\([^)]*\)\s*{[\s\S]*?(?=\n\/\*\*|\nfunction\s+\w+|\Z)/g;
+    let match;
+    while ((match = functionRegex.exec(helpersCode)) !== null) {
+        const functionName = match[1];
+        helpers[functionName] = match[0].trim();
+    }
+}
+
+/**
+ * Detect which helper functions are used in the code
+ * @param {string} code - The bookmarklet code
+ * @returns {Set<string>} Set of helper function names used
+ */
+function detectUsedHelpers(code) {
+    const used = new Set();
+    const helperNames = Object.keys(helpers);
+    
+    for (const helperName of helperNames) {
+        // Check if function is called in the code
+        const callRegex = new RegExp(`\\b${helperName}\\s*\\(`, 'g');
+        if (callRegex.test(code)) {
+            used.add(helperName);
+        }
+    }
+    
+    return used;
+}
+
+/**
+ * Inject used helper functions into the code
+ * @param {string} code - The bookmarklet code
+ * @returns {string} Code with helpers injected
+ */
+function injectHelpers(code) {
+    const usedHelpers = detectUsedHelpers(code);
+    
+    if (usedHelpers.size === 0) {
+        return code;
+    }
+    
+    // Build helpers code block
+    const helpersCode = Array.from(usedHelpers)
+        .map(name => helpers[name])
+        .join('\n\n    ');
+    
+    // Inject helpers inside the IIFE, after 'use strict'
+    const injectionMarker = "'use strict';";
+    const injectionPoint = code.indexOf(injectionMarker);
+    
+    if (injectionPoint !== -1) {
+        const beforeStrict = code.substring(0, injectionPoint + injectionMarker.length);
+        const afterStrict = code.substring(injectionPoint + injectionMarker.length);
+        
+        return `${beforeStrict}\n\n    // === Shared Helper Functions ===\n    ${helpersCode}\n    // === End Helper Functions ===\n${afterStrict}`;
+    }
+    
+    // Fallback: inject at the beginning of the IIFE
+    const iifeStart = code.indexOf('(function() {');
+    if (iifeStart !== -1) {
+        const beforeIIFE = code.substring(0, iifeStart + '(function() {'.length);
+        const afterIIFE = code.substring(iifeStart + '(function() {'.length);
+        
+        return `${beforeIIFE}\n    // === Shared Helper Functions ===\n    ${helpersCode}\n    // === End Helper Functions ===\n${afterIIFE}`;
+    }
+    
+    // Last resort: prepend to code
+    return `// === Shared Helper Functions ===\n${helpersCode}\n// === End Helper Functions ===\n\n${code}`;
 }
 
 // Build each bookmarklet
@@ -42,11 +118,17 @@ async function buildBookmarklets() {
                 code = logic
                     .replace('\'{{HTML_CONTENT}}\'', JSON.stringify(template))
                     .replace('\'{{CSS_CONTENT}}\'', JSON.stringify(styles));
+                
+                // Inject helpers
+                code = injectHelpers(code);
                     
             } else if (fs.existsSync(indexPath)) {
                 // Legacy single-file structure
                 console.log(`📄 Building ${bookmarkletName} from single file...`);
                 code = fs.readFileSync(indexPath, 'utf8');
+                
+                // Inject helpers
+                code = injectHelpers(code);
             } else {
                 console.warn(`⚠️  Skipping ${bookmarkletName}: No valid structure found`);
                 continue;

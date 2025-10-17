@@ -1,0 +1,8 @@
+{
+  "name": "IcM Resolve Mitigated",
+  "description": "Automates resolution of mitigated IcM incidents by searching for a pattern, selecting up to 6 matching incidents, and clicking through the resolve workflow",
+  "category": "IcM",
+  "author": "Chris Ribe",
+  "version": "1.0.0",
+  "tags": ["icm", "automation", "resolve", "mitigated"]
+}
