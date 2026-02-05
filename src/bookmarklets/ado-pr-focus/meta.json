@@ -1,0 +1,8 @@
+{
+    "name": "ADO PR Focus Mode",
+    "description": "Toggle focus mode on Azure DevOps Pull Request pages to hide the header, title bar, tabs, and toolbar - maximizing space for code review.",
+    "category": "Azure DevOps",
+    "author": "chrisribe",
+    "version": "1.0.0",
+    "tags": ["azure-devops", "ado", "pull-request", "code-review", "focus", "ui"]
+}
