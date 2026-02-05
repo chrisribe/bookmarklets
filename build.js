@@ -392,9 +392,9 @@ function generateIndexHtml(bookmarklets) {
 
         <div class="instructions">
             <h3>🚀 How to Install Bookmarklets</h3>
-            <p><strong>Method 1:</strong> Right-click the "Add to Bookmarks" button and select "Bookmark this link"</p>
-            <p><strong>Method 2:</strong> Drag the "Add to Bookmarks" button to your bookmarks bar</p>
-            <p><strong>Method 3:</strong> Copy the code and create a new bookmark manually with the copied code as the URL</p>
+            <p><strong>Method 1 (Easiest):</strong> Drag the bookmarklet button (e.g., "📌 Multi Select") directly to your bookmarks bar</p>
+            <p><strong>Method 2:</strong> Right-click the bookmarklet button and select "Bookmark this link" or "Add to favorites"</p>
+            <p><strong>Method 3:</strong> Click "📋 Copy Code" and manually create a new bookmark with the copied code as the URL</p>
         </div>
 
         ${categories.map(category => {
@@ -414,8 +414,8 @@ function generateIndexHtml(bookmarklets) {
                                     <span class="bookmarklet-size">${bookmarklet.size} bytes</span>
                                 </div>
                                 <div class="bookmarklet-actions">
-                                    <a href="${escapeHtml(bookmarklet.code)}" class="btn btn-primary" title="Drag to bookmarks bar or right-click to bookmark">
-                                        📌 Add to Bookmarks
+                                    <a href="${escapeHtml(bookmarklet.code)}" class="btn btn-primary" title="Drag this link to your bookmarks bar or right-click and select 'Bookmark this link'">
+                                        📌 ${escapeHtml(bookmarklet.name)}
                                     </a>
                                     <button class="btn btn-secondary" onclick="copyFromTextarea('code-${globalIndex}', '${escapeJs(bookmarklet.name)}')">
                                         📋 Copy Code
