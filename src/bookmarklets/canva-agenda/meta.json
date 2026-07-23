@@ -1,0 +1,8 @@
+{
+    "name": "Canva Agenda",
+    "description": "Automatically adds pages to a Canva design from uploaded images. Upload your agenda PNGs to Canva first, then run this bookmarklet to batch-create pages with each image placed full-bleed.",
+    "category": "Productivity",
+    "author": "chrisribe",
+    "version": "1.0.0",
+    "tags": ["canva", "agenda", "automation", "images", "pages"]
+}

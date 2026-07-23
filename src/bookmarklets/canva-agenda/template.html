@@ -1,0 +1,33 @@
+<div id="{{BOOKMARKLET_ID}}">
+    <div class="header">
+        <h3>📅 Canva Agenda</h3>
+        <button class="close-btn" onclick="{{CLOSE_HANDLER}}">×</button>
+    </div>
+
+    <div class="content">
+        <div class="status-section">
+            <div class="status-label">Status</div>
+            <div id="{{BOOKMARKLET_ID}}-status" class="status-value">Ready</div>
+        </div>
+
+        <div class="progress-section" id="{{BOOKMARKLET_ID}}-progress-section" style="display:none">
+            <div class="progress-bar-bg">
+                <div id="{{BOOKMARKLET_ID}}-progress-bar" class="progress-bar-fill" style="width:0%"></div>
+            </div>
+            <div id="{{BOOKMARKLET_ID}}-progress-text" class="progress-text">0 / 0</div>
+        </div>
+
+        <div class="controls">
+            <button class="action-btn btn-primary" id="{{BOOKMARKLET_ID}}-run-btn" onclick="{{RUN_HANDLER}}">
+                ▶ Run — Add Pages from Uploads
+            </button>
+            <button class="action-btn btn-secondary" onclick="{{STOP_HANDLER}}">
+                ⏹ Stop
+            </button>
+        </div>
+
+        <div class="hint">
+            ⚠️ Make sure the <strong>Uploads panel</strong> is open and images are visible before running.
+        </div>
+    </div>
+</div>
