@@ -24,36 +24,28 @@
     const DELAY_INPUT     = 300;   // wait after width set
     const DELAY_ALIGN     = 200;   // wait after each align click
 
-    // ── Selectors from Chrome Recorder JSON (exact) ───────────────────────
+    // ── Stable selectors (aria-label/role only — class names are hashed and change on deploy) ──
 
-    // Pages strip: one div per page, aria-label="Page N"
-    const PAGE_STRIP_SEL = 'div._pFsfA[aria-label^="Page "]';
+    // Page strip: count pages by aria-label="Page N", click parent to focus
+    const PAGE_COUNT_SEL  = '[aria-label^="Page "][aria-label$="1"],[aria-label^="Page "]';
+    const PAGE_STRIP_SEL  = '[aria-label^="Page "]';
 
-    // Upload thumbnails — div.tOhFhQ has aria-label=filename for filtering
-    // div._4_LWAA is the Add Page container — NOT a thumbnail, removed
+    // Upload thumbnails — role=button with aria-label=filename
     const THUMB_SELECTORS = [
-        'div.tOhFhQ[role="button"]',      // real: aria-label=filename
-        'div.BE2rWg[draggable="true"]',   // draggable wrapper fallback
+        '[role="button"][aria-label*="300dpi"]',   // our exported filenames contain 300dpi
+        '[role="button"][aria-label*=".png"]',     // any png upload
+        '[role="button"][aria-label*="semaine"]',  // agenda-specific
+        '[draggable="true"][role="button"]',       // any draggable upload item
         'aside [draggable="true"]',
     ];
 
-    // Position button: aria/Position[role="button"] → click the span inside
-    // Recording used: div:nth-of-type(11) span — too fragile. Use aria instead:
+    // Position button in top toolbar
     const POSITION_BTN_SEL = 'button[aria-label="Position"]';
 
-    // Add Page button — the one at the bottom of the pages strip
-    // div._4_LWAA > div.UUnYqA > button[aria-label="Add page"]
+    // Add Page button
     const ADD_PAGE_SELECTORS = [
-        'div.UUnYqA button[aria-label="Add page"]',   // exact from live DOM
-        'div._4_LWAA button[aria-label="Add page"]',  // broader
-        '[aria-label="Add page"]',
-        '[aria-label="Ajouter une page"]',
-    ];
-
-    const UPLOADS_TAB_SELECTORS = [
-        'button[role="tab"] div[title="Uploads"]',
-        'button[role="tab"] div[aria-label="Uploads"]',
-        'button[role="tab"]:has(div[title="Uploads"])',
+        'button[aria-label="Add page"]',
+        'button[aria-label="Ajouter une page"]',
     ];
 
     let running = false;
@@ -87,11 +79,13 @@
     }
 
     async function ensureUploadsOpen() {
-        if (document.querySelector('div.tOhFhQ[role="button"], div._4_LWAA > div > button')) return;
-        for (const sel of UPLOADS_TAB_SELECTORS) {
-            const el = document.querySelector(sel);
-            if (el) { (el.closest('button') || el).click(); await sleep(1000); return; }
-        }
+        // Check if uploads are visible: any role=button with a png filename
+        if (document.querySelector('[role="button"][aria-label*=".png"], [role="button"][aria-label*="300dpi"]')) return;
+        // Click the Uploads tab by its aria-label
+        const tab = document.querySelector(
+            'button[role="tab"][aria-label="Uploads"], button[role="tab"][aria-label="T\u00e9l\u00e9chargements"]'
+        );
+        if (tab) { tab.click(); await sleep(800); }
     }
 
     function findAddPageBtn() {
@@ -166,22 +160,16 @@
         // Find Width input by its label text (recorder: aria/Width)
         // Label structure: <label for="_r_xxx_"><span>Width</span></label>
         function findInputByLabelText(text) {
-            const lower = text.toLowerCase();
             for (const label of document.querySelectorAll('label')) {
-                if ((label.textContent || '').trim().toLowerCase() === lower) {
+                if ((label.textContent || '').trim() === text) {
                     const id = label.getAttribute('for');
                     if (id) return document.getElementById(id);
                 }
             }
-            // fallback: span with label text inside a group containing an input
-            for (const span of document.querySelectorAll('span')) {
-                if ((span.textContent || '').trim() === text) {
-                    const group = span.closest('div[class]');
-                    if (group) {
-                        const inp = group.parentElement && group.parentElement.querySelector('input');
-                        if (inp) return inp;
-                    }
-                }
+            // Also try aria-labelledby
+            for (const input of document.querySelectorAll('input[aria-labelledby]')) {
+                const labelEl = document.getElementById(input.getAttribute('aria-labelledby'));
+                if (labelEl && (labelEl.textContent || '').trim() === text) return input;
             }
             return null;
         }
