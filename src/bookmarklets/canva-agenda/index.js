@@ -26,8 +26,8 @@
 
     // ── Selectors from Chrome Recorder JSON (exact) ───────────────────────
 
-    // Pages strip: each page card in the bottom/side strip = div.HTh_Cg
-    const PAGE_STRIP_SEL = 'div.HTh_Cg';
+    // Pages strip: one div per page, aria-label="Page N"
+    const PAGE_STRIP_SEL = 'div._pFsfA[aria-label^="Page "]';
 
     // Upload thumbnails — div.tOhFhQ has aria-label=filename for filtering
     // div._4_LWAA is the Add Page container — NOT a thumbnail, removed
