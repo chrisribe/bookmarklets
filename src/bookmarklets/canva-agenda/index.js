@@ -138,12 +138,17 @@
     }
 
     function setInputValue(input, value) {
+        input.focus();
+        input.select();
+        // Use native setter to bypass React's synthetic event system
         const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
         setter.call(input, value);
         input.dispatchEvent(new Event('input',  { bubbles: true }));
         input.dispatchEvent(new Event('change', { bubbles: true }));
-        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13, bubbles: true }));
-        input.dispatchEvent(new KeyboardEvent('keyup',   { key: 'Enter', keyCode: 13, bubbles: true }));
+        // Send Enter to commit
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true }));
+        input.dispatchEvent(new KeyboardEvent('keypress', { key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true }));
+        input.dispatchEvent(new KeyboardEvent('keyup',   { key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true }));
         input.blur();
     }
 
@@ -191,7 +196,7 @@
 
         const widthInput = await waitFor(() => findInputByLabelText('Width'), 8, 400);
         if (widthInput) {
-            setInputValue(widthInput, '8.5');
+            setInputValue(widthInput, '8.5 in');
             await sleep(DELAY_INPUT);
         } else {
             console.warn('[canva-agenda] Width input not found');
