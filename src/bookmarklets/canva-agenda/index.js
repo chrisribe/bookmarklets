@@ -280,9 +280,17 @@
                 addBtn.click();
 
                 // 2. Wait until the new page appears in the strip, then click it
-                //    This guarantees canvas focus is on the NEW page, not the old one
-                setStatus('[' + (i+1) + '/' + filtered.length + '] Waiting for new page…');
+                //    Canva does NOT auto-focus the new page — must click it explicitly
+                setStatus('[' + (i+1) + '/' + filtered.length + '] Clicking new page…');
                 await focusNewPage(pagesBefore);
+                // Also click the canvas area of the new page to give it editor focus
+                // div.HTh_Cg is the page card — click it a second time after a short delay
+                await sleep(400);
+                const pages = document.querySelectorAll(PAGE_STRIP_SEL);
+                if (pages.length > 0) {
+                    pages[pages.length - 1].click();
+                    await sleep(600);
+                }
                 if (stopRequested) break;
 
                 // 3. Place image by clicking the upload thumbnail button
