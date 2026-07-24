@@ -19,29 +19,42 @@
     if (existingStyles) existingStyles.remove();
 
     const DELAY_STEP      = 400;
-    const DELAY_PAGE_ADD  = 3500;  // wait for Canva to render + auto-focus new page
-    const DELAY_IMG_PLACE = 3000;  // wait for image to land + auto-select
+    const DELAY_PAGE_ADD  = 3500;
+    const DELAY_IMG_PLACE = 3000;
     const DELAY_POSITION  = 800;
     const DELAY_INPUT     = 600;
     const DELAY_ALIGN     = 500;
 
-    const UPLOADS_TAB_SELECTORS = [
-        'button[role="tab"] div[title="Uploads"]',
-        'button[role="tab"] div[aria-label="Uploads"]',
-        'button[role="tab"]:has(div[title="Uploads"])',
-    ];
+    // ── Selectors from Chrome Recorder JSON (exact) ───────────────────────
+
+    // Pages strip: each page card in the bottom/side strip = div.HTh_Cg
+    const PAGE_STRIP_SEL = 'div.HTh_Cg';
+
+    // Upload thumbnail: div._4_LWAA > div > button  (from recording step 10)
+    // Also keep the tOhFhQ fallback from earlier DOM probe
     const THUMB_SELECTORS = [
-        'div.tOhFhQ[role="button"]',
+        'div._4_LWAA > div > button',     // exact from recorder
+        'div.tOhFhQ[role="button"]',       // from earlier DOM probe
         'div.BE2rWg[draggable="true"]',
-        '.xDrn5A [role="button"]',
         'aside [draggable="true"]',
     ];
+
+    // Position button: aria/Position[role="button"] → click the span inside
+    // Recording used: div:nth-of-type(11) span — too fragile. Use aria instead:
+    const POSITION_BTN_SEL = 'button[aria-label="Position"]';
+
     const ADD_PAGE_SELECTORS = [
         '[data-testid="add-page-button"]',
         '[aria-label="Add page"]',
         '[aria-label="Ajouter une page"]',
         '[aria-label*="Add page"]',
         '[aria-label*="Ajouter une page"]',
+    ];
+
+    const UPLOADS_TAB_SELECTORS = [
+        'button[role="tab"] div[title="Uploads"]',
+        'button[role="tab"] div[aria-label="Uploads"]',
+        'button[role="tab"]:has(div[title="Uploads"])',
     ];
 
     let running = false;
@@ -75,7 +88,7 @@
     }
 
     async function ensureUploadsOpen() {
-        if (document.querySelector('div.tOhFhQ[role="button"]')) return;
+        if (document.querySelector('div.tOhFhQ[role="button"], div._4_LWAA > div > button')) return;
         for (const sel of UPLOADS_TAB_SELECTORS) {
             const el = document.querySelector(sel);
             if (el) { (el.closest('button') || el).click(); await sleep(1000); return; }
@@ -93,6 +106,17 @@
         }) || null;
     }
 
+    // Focus the LAST page in the strip by clicking its div.HTh_Cg element
+    async function focusLastPage() {
+        const pages = document.querySelectorAll(PAGE_STRIP_SEL);
+        if (pages.length > 0) {
+            pages[pages.length - 1].click();
+            await sleep(500);
+            return true;
+        }
+        return false;
+    }
+
     function getThumbName(el) {
         if (el.getAttribute('aria-label')) return el.getAttribute('aria-label');
         const p = el.closest('[aria-label]') || el.closest('[title]') || el;
@@ -100,8 +124,9 @@
     }
 
     function getClickTarget(thumb) {
+        if (thumb.tagName === 'BUTTON') return thumb;
         if (thumb.getAttribute('role') === 'button') return thumb;
-        return thumb.querySelector('[role="button"]') || thumb;
+        return thumb.querySelector('button,[role="button"]') || thumb;
     }
 
     function setInputValue(input, value) {
@@ -124,40 +149,42 @@
     }
 
     async function applyPositionAndSize() {
-        // Position button is in the top toolbar — only visible when image is selected
-        // Wait up to 8s for it to appear after image placement
+        // Wait for Position button (only visible when element selected)
         const posBtn = await waitFor(
-            () => document.querySelector('button[aria-label="Position"]'),
-            16, 500
+            () => document.querySelector(POSITION_BTN_SEL),
+            16, 500  // up to 8s
         );
-        if (!posBtn) {
-            console.warn('[canva-agenda] Position button not found');
-            return;
-        }
+        if (!posBtn) { console.warn('[canva-agenda] Position button not found'); return; }
+
         posBtn.click();
         await sleep(DELAY_POSITION);
 
-        // W / H inputs in the Position side panel
-        // order: Width(0), Height(1), X(2), Y(3), Rotate(4)
+        // Width input — find by aria-label="Width" (exact from recorder)
+        const widthInput = await waitFor(
+            () => document.querySelector('input[aria-labelledby]') &&
+                  [...document.querySelectorAll('input.LMU2Kg[inputmode="decimal"]')][0],
+            6, 300
+        );
+        // Fallback: all decimal inputs, Width is first
         const inputs = [...document.querySelectorAll('input.LMU2Kg[inputmode="decimal"]')];
         if (inputs.length >= 2) {
-            setInputValue(inputs[0], '8.5 in');
+            setInputValue(inputs[0], '8.5');   // Width — no units, just number (recorder used "8.5")
             await sleep(DELAY_INPUT);
-            setInputValue(inputs[1], '11 in');
-            await sleep(DELAY_INPUT);
+            // Height: recorder didn’t change it (ratio locked). Only set if needed.
+            // setInputValue(inputs[1], '11');
+            // await sleep(DELAY_INPUT);
         }
 
-        // Align Top then Center (EN + FR)
+        // Top (button 1 in arrange section)
         const topBtn = findBtnByText('Top', 'Haut');
         if (topBtn) { topBtn.click(); await sleep(DELAY_ALIGN); }
 
+        // Center (button 4 in arrange section)
         const centerBtn = findBtnByText('Center', 'Centre');
         if (centerBtn) { centerBtn.click(); await sleep(DELAY_ALIGN); }
 
-        // Close the Position panel
-        const closeBtn = document.querySelector(
-            'button[aria-label="Close"], [class*="positionPanel"] button[aria-label="Close"]'
-        );
+        // Close Position panel
+        const closeBtn = document.querySelector('button[aria-label="Close"]');
         if (closeBtn) { closeBtn.click(); await sleep(300); }
     }
 
@@ -205,33 +232,28 @@
                 const target = getClickTarget(thumb);
                 const name   = getThumbName(target) || getThumbName(thumb) || ('image ' + (i + 1));
 
-                // 1. Add new page — Canva auto-focuses the new page after this
+                // 1. Add new page
                 setStatus('[' + (i+1) + '/' + filtered.length + '] Adding page…');
                 const addBtn = findAddPageBtn();
                 if (!addBtn) { setStatus('"Add page" not found.', 'error'); break; }
                 addBtn.click();
-
-                // 2. Wait for page to be created AND auto-focused by Canva
-                //    Do NOT click anything else here — let Canva handle the focus
                 await sleep(DELAY_PAGE_ADD);
                 if (stopRequested) break;
 
-                // 3. Place image by double-clicking the upload thumbnail
-                //    Canva places it on the currently focused page
+                // 2. Click the last page strip card (div.HTh_Cg) to guarantee canvas focus
+                //    This is exactly what the recorder captured between Add Page and image click
+                setStatus('[' + (i+1) + '/' + filtered.length + '] Focusing new page…');
+                await focusLastPage();
+
+                // 3. Place image by clicking the upload thumbnail button
                 setStatus('[' + (i+1) + '/' + filtered.length + '] Placing: ' + name);
-                target.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-                await sleep(DELAY_STEP);
-                target.dispatchEvent(new MouseEvent('mouseup',   { bubbles: true }));
-                await sleep(DELAY_STEP);
                 target.click();
                 await sleep(DELAY_STEP);
-                target.dispatchEvent(new MouseEvent('dblclick',  { bubbles: true }));
-
-                // 4. Wait for image to land and become selected
+                target.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
                 await sleep(DELAY_IMG_PLACE);
                 if (stopRequested) break;
 
-                // 5. Size (8.5×11in) + align top + center via Position panel
+                // 4. Size + align
                 setStatus('[' + (i+1) + '/' + filtered.length + '] Sizing & aligning…');
                 await applyPositionAndSize();
 
