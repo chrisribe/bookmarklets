@@ -18,7 +18,7 @@
     const existingStyles = document.getElementById(BOOKMARKLET_ID + '-styles');
     if (existingStyles) existingStyles.remove();
 
-    const DELAY_PAGE_ADD  = 1500;  // wait for new page to appear in strip
+    const DELAY_PAGE_ADD  = 600;   // wait for new page to appear in strip
     const DELAY_IMG_PLACE = 1500;  // wait for image to land + select
     const DELAY_POSITION  = 400;   // wait for Position panel to open
     const DELAY_INPUT     = 300;   // wait after width set
@@ -107,18 +107,16 @@
 
     // Wait for a new page to appear in the strip, then click it
     async function focusNewPage(previousCount) {
-        // Poll until page count increases (new page created)
         let pages;
-        for (let i = 0; i < 20; i++) {  // up to 10s
+        for (let i = 0; i < 30; i++) {  // up to 6s
             pages = document.querySelectorAll(PAGE_STRIP_SEL);
             if (pages.length > previousCount) break;
-            await sleep(500);
+            await sleep(200);
         }
-        // Click the last (new) page to give it canvas focus
         pages = document.querySelectorAll(PAGE_STRIP_SEL);
         if (pages.length > 0) {
             pages[pages.length - 1].click();
-            await sleep(600);
+            await sleep(200);
             return pages.length;
         }
         return previousCount;
