@@ -99,7 +99,8 @@
         }) || null;
     }
 
-    // Wait for a new page to appear in the strip, then click it
+    // Wait for a new page to appear in the strip, then click it.
+    // Returns new page count, or null if no new page appeared.
     async function focusNewPage(previousCount) {
         let pages;
         for (let i = 0; i < 30; i++) {  // up to 6s
@@ -108,12 +109,16 @@
             await sleep(200);
         }
         pages = document.querySelectorAll(PAGE_STRIP_SEL);
-        if (pages.length > 0) {
-            pages[pages.length - 1].click();
-            await sleep(200);
+        if (pages.length > previousCount) {
+            const newest = pages[pages.length - 1];
+            // Canva can keep canvas focus on prior page; click newest page twice to force focus.
+            newest.click();
+            await sleep(250);
+            newest.click();
+            await sleep(DELAY_PAGE_ADD);
             return pages.length;
         }
-        return previousCount;
+        return null;
     }
 
     function getThumbName(el) {
@@ -221,66 +226,22 @@
         if (runBtn) runBtn.disabled = true;
 
         try {
-            setStatus('Opening Uploads panel…');
-            await ensureUploadsOpen();
-            setStatus('Scanning images…');
+            setProgress(0, 0);
+            setStatus('Select/add one image on the canvas first…');
 
-            let thumbs = [];
-            for (const sel of THUMB_SELECTORS) {
-                thumbs = [...document.querySelectorAll(sel)];
-                if (thumbs.length > 0) break;
-            }
-            if (thumbs.length === 0) {
-                setStatus('No uploads found. Open the Uploads panel first.', 'error');
+            const posBtn = await waitFor(
+                () => document.querySelector(POSITION_BTN_SEL),
+                12, 400
+            );
+
+            if (!posBtn) {
+                setStatus('No image selected. Double-click an upload to add/select it, then run.', 'error');
                 return;
             }
 
-            const filterInput = prompt(
-                'Found ' + thumbs.length + ' uploaded images.\nFilter by name (e.g. "semaine"), or blank for ALL:',
-                'semaine'
-            );
-            if (filterInput === null) { setStatus('Cancelled.'); return; }
-
-            const filter   = filterInput.trim().toLowerCase();
-            const filtered = thumbs.filter(t => !filter || getThumbName(t).toLowerCase().includes(filter));
-            if (filtered.length === 0) { setStatus('No images match "' + filter + '".', 'error'); return; }
-            if (!confirm('Will add ' + filtered.length + ' pages, one image per page (8.5×11in, top-center).\n\nContinue?')) {
-                setStatus('Cancelled.'); return;
-            }
-
-            setProgress(0, filtered.length);
-
-            for (let i = 0; i < filtered.length; i++) {
-                if (stopRequested) { setStatus('Stopped at ' + i + ' / ' + filtered.length + '.', 'error'); break; }
-
-                const thumb  = filtered[i];
-                const target = getClickTarget(thumb);
-                const name   = getThumbName(target) || getThumbName(thumb) || ('image ' + (i + 1));
-
-                // 1. Count current pages, then add a new one
-                setStatus('[' + (i+1) + '/' + filtered.length + '] Adding page…');
-                const pagesBefore = document.querySelectorAll(PAGE_STRIP_SEL).length;
-                const addBtn = findAddPageBtn();
-                if (!addBtn) { setStatus('"Add page" not found.', 'error'); break; }
-                addBtn.click();
-
-                // 2. Wait for new page in strip, click it once to focus
-                await focusNewPage(pagesBefore);
-                if (stopRequested) break;
-
-                // 3. Place image
-                setStatus('[' + (i+1) + '/' + filtered.length + '] Placing: ' + name);
-                target.click();
-                target.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
-                await sleep(DELAY_IMG_PLACE);
-                if (stopRequested) break;
-
-                // 4. Size + align
-                await applyPositionAndSize();
-                setProgress(i + 1, filtered.length);
-            }
-
-            if (!stopRequested) setStatus('\u2705 Done! ' + filtered.length + ' pages created.', 'success');
+            setStatus('Applying width + top/center…');
+            await applyPositionAndSize();
+            setStatus('✅ Done for selected image.', 'success');
 
         } catch (err) {
             console.error('[canva-agenda]', err);
