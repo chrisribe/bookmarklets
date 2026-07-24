@@ -160,36 +160,68 @@
         // Wait for Position button (only visible when element selected)
         const posBtn = await waitFor(
             () => document.querySelector(POSITION_BTN_SEL),
-            16, 500  // up to 8s
+            16, 500
         );
         if (!posBtn) { console.warn('[canva-agenda] Position button not found'); return; }
-
         posBtn.click();
         await sleep(DELAY_POSITION);
 
-        // Width input — find by aria-label="Width" (exact from recorder)
-        const widthInput = await waitFor(
-            () => document.querySelector('input[aria-labelledby]') &&
-                  [...document.querySelectorAll('input.LMU2Kg[inputmode="decimal"]')][0],
-            6, 300
-        );
-        // Fallback: all decimal inputs, Width is first
-        const inputs = [...document.querySelectorAll('input.LMU2Kg[inputmode="decimal"]')];
-        if (inputs.length >= 2) {
-            setInputValue(inputs[0], '8.5');   // Width — no units, just number (recorder used "8.5")
-            await sleep(DELAY_INPUT);
-            // Height: recorder didn’t change it (ratio locked). Only set if needed.
-            // setInputValue(inputs[1], '11');
-            // await sleep(DELAY_INPUT);
+        // Find Width input by its label text (recorder: aria/Width)
+        // Label structure: <label for="_r_xxx_"><span>Width</span></label>
+        function findInputByLabelText(text) {
+            const lower = text.toLowerCase();
+            for (const label of document.querySelectorAll('label')) {
+                if ((label.textContent || '').trim().toLowerCase() === lower) {
+                    const id = label.getAttribute('for');
+                    if (id) return document.getElementById(id);
+                }
+            }
+            // fallback: span with label text inside a group containing an input
+            for (const span of document.querySelectorAll('span')) {
+                if ((span.textContent || '').trim() === text) {
+                    const group = span.closest('div[class]');
+                    if (group) {
+                        const inp = group.parentElement && group.parentElement.querySelector('input');
+                        if (inp) return inp;
+                    }
+                }
+            }
+            return null;
         }
 
-        // Top (button 1 in arrange section)
-        const topBtn = findBtnByText('Top', 'Haut');
-        if (topBtn) { topBtn.click(); await sleep(DELAY_ALIGN); }
+        const widthInput = await waitFor(() => findInputByLabelText('Width'), 8, 400);
+        if (widthInput) {
+            setInputValue(widthInput, '8.5');
+            await sleep(DELAY_INPUT);
+        } else {
+            console.warn('[canva-agenda] Width input not found');
+        }
 
-        // Center (button 4 in arrange section)
-        const centerBtn = findBtnByText('Center', 'Centre');
+        // Find Top and Center buttons scoped to the Position panel
+        // The panel is the aside/panel that appeared after clicking Position
+        // Recorder: button[1] = Top, button[4] = Center in "Align to page" section
+        function findAlignBtn(text) {
+            const lower = text.toLowerCase();
+            // Look for button containing a <p> with exact text (from recorder structure)
+            for (const p of document.querySelectorAll('p')) {
+                if ((p.textContent || '').trim().toLowerCase() === lower) {
+                    const btn = p.closest('button');
+                    if (btn && btn.offsetParent) return btn;
+                }
+            }
+            // fallback: button by innerText
+            return [...document.querySelectorAll('button')].find(b =>
+                (b.innerText || '').trim().toLowerCase() === lower && b.offsetParent
+            ) || null;
+        }
+
+        const topBtn = await waitFor(() => findAlignBtn('Top'), 6, 300);
+        if (topBtn) { topBtn.click(); await sleep(DELAY_ALIGN); }
+        else console.warn('[canva-agenda] Top button not found');
+
+        const centerBtn = await waitFor(() => findAlignBtn('Center'), 6, 300);
         if (centerBtn) { centerBtn.click(); await sleep(DELAY_ALIGN); }
+        else console.warn('[canva-agenda] Center button not found');
 
         // Close Position panel
         const closeBtn = document.querySelector('button[aria-label="Close"]');
