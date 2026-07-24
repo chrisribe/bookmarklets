@@ -127,7 +127,7 @@
         // Position button is in the top toolbar — only visible when image is selected
         // Wait up to 8s for it to appear after image placement
         const posBtn = await waitFor(
-            () => document.querySelector('button[aria-label="Position panel open"]'),
+            () => document.querySelector('button[aria-label="Position"]'),
             16, 500
         );
         if (!posBtn) {
