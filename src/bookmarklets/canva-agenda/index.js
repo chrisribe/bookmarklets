@@ -18,12 +18,11 @@
     const existingStyles = document.getElementById(BOOKMARKLET_ID + '-styles');
     if (existingStyles) existingStyles.remove();
 
-    const DELAY_STEP      = 400;
-    const DELAY_PAGE_ADD  = 3500;
-    const DELAY_IMG_PLACE = 3000;
-    const DELAY_POSITION  = 800;
-    const DELAY_INPUT     = 600;
-    const DELAY_ALIGN     = 500;
+    const DELAY_PAGE_ADD  = 1500;  // wait for new page to appear in strip
+    const DELAY_IMG_PLACE = 1500;  // wait for image to land + select
+    const DELAY_POSITION  = 400;   // wait for Position panel to open
+    const DELAY_INPUT     = 300;   // wait after width set
+    const DELAY_ALIGN     = 200;   // wait after each align click
 
     // ── Selectors from Chrome Recorder JSON (exact) ───────────────────────
 
@@ -279,34 +278,20 @@
                 if (!addBtn) { setStatus('"Add page" not found.', 'error'); break; }
                 addBtn.click();
 
-                // 2. Wait until the new page appears in the strip, then click it
-                //    Canva does NOT auto-focus the new page — must click it explicitly
-                setStatus('[' + (i+1) + '/' + filtered.length + '] Clicking new page…');
+                // 2. Wait for new page in strip, click it once to focus
                 await focusNewPage(pagesBefore);
-                // Also click the canvas area of the new page to give it editor focus
-                // div.HTh_Cg is the page card — click it a second time after a short delay
-                await sleep(400);
-                const pages = document.querySelectorAll(PAGE_STRIP_SEL);
-                if (pages.length > 0) {
-                    pages[pages.length - 1].click();
-                    await sleep(600);
-                }
                 if (stopRequested) break;
 
-                // 3. Place image by clicking the upload thumbnail button
+                // 3. Place image
                 setStatus('[' + (i+1) + '/' + filtered.length + '] Placing: ' + name);
                 target.click();
-                await sleep(DELAY_STEP);
                 target.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
                 await sleep(DELAY_IMG_PLACE);
                 if (stopRequested) break;
 
                 // 4. Size + align
-                setStatus('[' + (i+1) + '/' + filtered.length + '] Sizing & aligning…');
                 await applyPositionAndSize();
-
                 setProgress(i + 1, filtered.length);
-                await sleep(400);
             }
 
             if (!stopRequested) setStatus('\u2705 Done! ' + filtered.length + ' pages created.', 'success');
