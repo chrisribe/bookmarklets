@@ -30,12 +30,11 @@
     // Pages strip: each page card in the bottom/side strip = div.HTh_Cg
     const PAGE_STRIP_SEL = 'div.HTh_Cg';
 
-    // Upload thumbnail: div._4_LWAA > div > button  (from recording step 10)
-    // Also keep the tOhFhQ fallback from earlier DOM probe
+    // Upload thumbnails — div.tOhFhQ has aria-label=filename for filtering
+    // div._4_LWAA is the Add Page container — NOT a thumbnail, removed
     const THUMB_SELECTORS = [
-        'div.tOhFhQ[role="button"]',       // has aria-label=filename — use for matching
-        'div._4_LWAA > div > button',         // recorder exact (fallback)
-        'div.BE2rWg[draggable="true"]',
+        'div.tOhFhQ[role="button"]',      // real: aria-label=filename
+        'div.BE2rWg[draggable="true"]',   // draggable wrapper fallback
         'aside [draggable="true"]',
     ];
 
@@ -43,12 +42,13 @@
     // Recording used: div:nth-of-type(11) span — too fragile. Use aria instead:
     const POSITION_BTN_SEL = 'button[aria-label="Position"]';
 
+    // Add Page button — the one at the bottom of the pages strip
+    // div._4_LWAA > div.UUnYqA > button[aria-label="Add page"]
     const ADD_PAGE_SELECTORS = [
-        '[data-testid="add-page-button"]',
+        'div.UUnYqA button[aria-label="Add page"]',   // exact from live DOM
+        'div._4_LWAA button[aria-label="Add page"]',  // broader
         '[aria-label="Add page"]',
         '[aria-label="Ajouter une page"]',
-        '[aria-label*="Add page"]',
-        '[aria-label*="Ajouter une page"]',
     ];
 
     const UPLOADS_TAB_SELECTORS = [
