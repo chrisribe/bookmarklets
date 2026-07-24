@@ -33,8 +33,8 @@
     // Upload thumbnail: div._4_LWAA > div > button  (from recording step 10)
     // Also keep the tOhFhQ fallback from earlier DOM probe
     const THUMB_SELECTORS = [
-        'div._4_LWAA > div > button',     // exact from recorder
-        'div.tOhFhQ[role="button"]',       // from earlier DOM probe
+        'div.tOhFhQ[role="button"]',       // has aria-label=filename — use for matching
+        'div._4_LWAA > div > button',         // recorder exact (fallback)
         'div.BE2rWg[draggable="true"]',
         'aside [draggable="true"]',
     ];
