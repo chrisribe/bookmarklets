@@ -106,15 +106,23 @@
         }) || null;
     }
 
-    // Focus the LAST page in the strip by clicking its div.HTh_Cg element
-    async function focusLastPage() {
-        const pages = document.querySelectorAll(PAGE_STRIP_SEL);
+    // Wait for a new page to appear in the strip, then click it
+    async function focusNewPage(previousCount) {
+        // Poll until page count increases (new page created)
+        let pages;
+        for (let i = 0; i < 20; i++) {  // up to 10s
+            pages = document.querySelectorAll(PAGE_STRIP_SEL);
+            if (pages.length > previousCount) break;
+            await sleep(500);
+        }
+        // Click the last (new) page to give it canvas focus
+        pages = document.querySelectorAll(PAGE_STRIP_SEL);
         if (pages.length > 0) {
             pages[pages.length - 1].click();
-            await sleep(500);
-            return true;
+            await sleep(600);
+            return pages.length;
         }
-        return false;
+        return previousCount;
     }
 
     function getThumbName(el) {
@@ -232,18 +240,18 @@
                 const target = getClickTarget(thumb);
                 const name   = getThumbName(target) || getThumbName(thumb) || ('image ' + (i + 1));
 
-                // 1. Add new page
+                // 1. Count current pages, then add a new one
                 setStatus('[' + (i+1) + '/' + filtered.length + '] Adding page…');
+                const pagesBefore = document.querySelectorAll(PAGE_STRIP_SEL).length;
                 const addBtn = findAddPageBtn();
                 if (!addBtn) { setStatus('"Add page" not found.', 'error'); break; }
                 addBtn.click();
-                await sleep(DELAY_PAGE_ADD);
-                if (stopRequested) break;
 
-                // 2. Click the last page strip card (div.HTh_Cg) to guarantee canvas focus
-                //    This is exactly what the recorder captured between Add Page and image click
-                setStatus('[' + (i+1) + '/' + filtered.length + '] Focusing new page…');
-                await focusLastPage();
+                // 2. Wait until the new page appears in the strip, then click it
+                //    This guarantees canvas focus is on the NEW page, not the old one
+                setStatus('[' + (i+1) + '/' + filtered.length + '] Waiting for new page…');
+                await focusNewPage(pagesBefore);
+                if (stopRequested) break;
 
                 // 3. Place image by clicking the upload thumbnail button
                 setStatus('[' + (i+1) + '/' + filtered.length + '] Placing: ' + name);
